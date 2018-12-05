@@ -1,5 +1,12 @@
+
 DROP DATABASE IF EXISTS speakit_db;
 CREATE DATABASE speakit_db;
+USE speakit_db;
 
-DROP DATABASE IF EXISTS testdb;
-CREATE DATABASE testdb;
+CREATE TABLE user (
+  id INTEGER AUTO_INCREMENT NOT NULL,
+  burger_name VARCHAR(300),
+  devoured BOOLEAN DEFAULT FALSE,
+  PRIMARY KEY (id)
+)
+
