@@ -3,33 +3,27 @@ DROP DATABASE IF EXISTS speakit_db;
 CREATE DATABASE speakit_db;
 USE speakit_db;
 
-CREATE TABLE Users(
-  user_id INTEGER AUTO_INCREMENT NOT NULL,
-  user_name VARCHAR(300),
-  user_email VARCHAR(250),
-  password Varchar(20),
-  FOREIGN KEY savedsp(sp_id)
-  REFERENCES subspeaks(sp_id)
-  FOREIGN KEY savedpost(post_id)
-  REFERENCES savedpost(post_id)
-
-  PRIMARY KEY (user_id)
-)
-
-CREATE TABLE Posts (
+CREATE TABLE posts (
     post_id INTEGER AUTO_INCREMENT NOT NULL,
     post_text VARCHAR(300),
     tags VARCHAR (100),
     views VARCHAR (100),
     title VARCHAR(100),
     categories VARCHAR (100),
-    FOREIGN KEY whopost(user_id)
-    REFERENCES whopost(user_id)
-
   PRIMARY KEY (post_id)
-)
+);
 
-CREATE TABLE Subspeaks (
+
+CREATE TABLE users (
+  user_id INTEGER AUTO_INCREMENT NOT NULL,
+  user_name VARCHAR(300),
+  user_email VARCHAR(250),
+  password Varchar(20),
+  PRIMARY KEY (user_id)
+);
+
+
+CREATE TABLE subspeaks (
   sp_id INTEGER AUTO_INCREMENT NOT NULL,
   user_name VARCHAR(300),
   views VARCHAR(100),
@@ -37,17 +31,41 @@ CREATE TABLE Subspeaks (
   numberofsubs VARCHAR(100),
   icon VARCHAR(100),
   PRIMARY KEY (sp_id)
-)
+);
 
-CREATE TABLE Comments(
+CREATE TABLE comments(
   comment_id INTEGER AUTO_INCREMENT NOT NULL,
   comments VARCHAR(300),
   Voting VARCHAR(100),
-  FOREIGN KEY whocomment(user_id)
-  REFERENCES whocomment(user_id)
-  FOREIGN KEY whatpost(post_id)
-  REFERENCES whatpost(post_id)
-
   PRIMARY KEY (comment_id)
-)
+);
 
+ALTER TABLE users
+ADD FOREIGN KEY savedpost(post_id)
+REFERENCES posts(post_id)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+
+ALTER TABLE users
+ADD FOREIGN KEY savedsp(sp_id)
+REFERENCES subspeaks(sp_id)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+
+ALTER TABLE posts
+ADD FOREIGN KEY whopost(user_id)
+REFERENCES users(user_id)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+
+ALTER TABLE comments
+ADD FOREIGN KEY whocomment(user_id)
+REFERENCES users(user_id)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+
+ALTER TABLE comments
+ADD FOREIGN KEY whatpost(post_id)
+REFERENCES posts(post_id)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
