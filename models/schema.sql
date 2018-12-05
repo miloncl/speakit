@@ -43,10 +43,10 @@ CREATE TABLE Comments(
   comment_id INTEGER AUTO_INCREMENT NOT NULL,
   comments VARCHAR(300),
   Voting VARCHAR(100),
-  FOREIGN KEY whocomment(comment_id)
-  REFERENCES whocomment(comment_id)
-  FOREIGN KEY whopost(comment_id)
-  REFERENCES whopost(comment_id)
+  FOREIGN KEY whocomment(user_id)
+  REFERENCES whocomment(user_id)
+  FOREIGN KEY whatpost(post_id)
+  REFERENCES whatpost(post_id)
 
   PRIMARY KEY (comment_id)
 )
