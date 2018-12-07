@@ -1,7 +1,11 @@
 module.exports = function(sequelize, DataTypes) {
     var Posts = sequelize.define("Post", {
-      text: DataTypes.STRING,
-      description: DataTypes.TEXT
+      id:DataTypes.STRING,
+    posttext:DataTypes.TEXT,
+    tags :DataTypes.TEXT,
+    categories:DataTypes.TEXT,
+    views:DataTypes.INTERGER,
+    title:DataTypes.TEXT
     });
-    return Example;
+    return Post;
   };
