@@ -1,9 +1,7 @@
 module.exports = function(sequelize, DataTypes) {
-
-    var users = sequelize.define("Users", {
+    var subspeaks = sequelize.define("Subspeaks", {
       text: DataTypes.STRING,
       description: DataTypes.TEXT
     });
     return Example;
   };
-
