@@ -1,7 +1,7 @@
 module.exports = function (sequelize, DataTypes) {
   var Posts = sequelize.define("Post", {
-    id: DataTypes.STRING,
-    posttext: DataTypes.TEXT,
+    post_id: DataTypes.STRING,
+    post_text: DataTypes.TEXT,
     tags: DataTypes.TEXT,
     categories: DataTypes.TEXT,
     views: DataTypes.INTERGER,
