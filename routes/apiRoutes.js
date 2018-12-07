@@ -1,5 +1,7 @@
 var db = require("../models");
 var expressValidator = require("express-validator");
+var bcrypt = require('bcrypt');
+var saltRounds = 10;
 
 module.exports = function(app) {
   // Get all examples
@@ -20,35 +22,37 @@ module.exports = function(app) {
     req.checkBody('passwordMatch', 'Password must be 8 characters long.').len(8, 100); 
     req.checkBody('passwordMatch', 'Password must be 8 characters long.').equals(req.body.password); 
 
-    const errors = req.validationErrors();
+    var errors = req.validationErrors();
     
     if(errors) {
       console.log(`errors: ${JSON.stringify(errors)}`) 
 
       res.render('register', {title: "Register",  errors: errors});
     } else {
-    
-    db.Users.findOrCreate({
-      where: { user_name: req.body.username },
-      defaults: {
-        user_name: req.body.username,
-        user_email: req.body.email,
-        password: req.body.password
-      }
-    }).spread((user, created) => {
-      //read about spread at http://docs.sequelizejs.com/manual/tutorial/models-usage.html
-      console.log(user)
-      console.log(`created: ${created}`)
-      if(created === false){
-        res.render("register", {
-          title: "That Username already exists"
-        });
-      } else {
-        res.render("register", {
-          title: "User Registered"
-        });
-      }
-    });
+      var salt = bcrypt.genSaltSync(saltRounds);
+      var hash = bcrypt.hashSync(req.body.password, salt); 
+      //bcrypt the password then insert
+        console.log('hello')
+        db.Users.findOrCreate({
+          where: { user_name: req.body.username },
+          defaults: {
+            user_name: req.body.username,
+            user_email: req.body.email,
+            password: hash 
+          }
+        }).spread((user, created) => {
+          //read about spread at http://docs.sequelizejs.com/manual/tutorial/models-usage.html
+          console.log(`created: ${created}`)
+          if(created === false){
+            res.render("register", {
+              title: "That Username already exists"
+            });
+          } else {
+            res.render("register", {
+              title: "User Registered"
+            });
+          }
+        })
     }
   });
 
