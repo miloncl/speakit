@@ -18,11 +18,6 @@ module.exports = function (app) {
   });
 
   //register a different view when the user registers
-  app.post("/register", function (req, res) {
-    res.render("register", {
-      title: "User Registered"
-    })
-  });
   //route for the subspeaks
   //This will display the posts of that specific subspeak
   app.get("/s/:username", function (req, res) {
