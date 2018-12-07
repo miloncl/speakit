@@ -1,33 +1,83 @@
-<div id="home">
-  <div class="container">
-    <div class="row">
-      <div class="col-8 offset-2">
-        <h1>{{msg}}</h1>
-        <h2>This is our Home Page!</h2>
-        <form class="clearfix mb-4" action="POST">
-          <div class="form-group">
-            <label for="example-text">Example Text</label>
-            <input type="text" id="example-text" class="form-control" aria-describedby="example-text" placeholder="Enter Example Text">
-          </div>
-          <div class="form-group">
-            <label for="example-description">Example Description</label>
-            <textarea class="form-control" id="example-description" aria-describedby="example-description" placeholder="Enter Example Description"></textarea>
-          </div>
-          <button id="submit" class="btn btn-primary float-right">Submit</button>
-        </form>
-        <h3>Examples:</h3>
-        <ul id="example-list" class="list-group">
-          {{#each examples}}
-          <li data-id="{{this.id}}" class="list-group-item">
-            <a href="example/{{this.id}}">{{this.text}}</a>
-            <button class="btn btn-danger float-right delete">ｘ</button>
-          </li>
-          {{/each}}
-        </ul>
+{{!-- my feed page --}}
+
+{{!-- posts div --}}
+<div class="wrapper">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <input type="text" class="search_bar">
+  </nav <div class="container" id="central_container">
+  <div class="row" id="title_row">
+
+    {{!-- title bar --}}
+    <div class="col-xl-6 d-flex justify-content-start left_col_title ">
+      <div class="title">
+        MY FEED
       </div>
     </div>
+    <div class="col-xl-6 d-flex justify-content-end right_col_title">
+      <ul>
+        <li>Useful</li>
+        <li>Informative</li>
+        <li>Educational</li>
+      </ul>
+    </div>
+  </div>
+  <div class="row">
+
+    {{!-- posts --}}
+    <div class="post_container">
+
+      <div class="post_title_container d-flex">
+        <h3 class="title">Temporary Post</h3>
+        <span class="subspeak_name ml-auto">test</span>
+      </div>
+
+      <div class="post_description"> Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis nam non quis,
+        ipsam eaque aspernatur atque consectetur impedit dignissimos. Numquam alias excepturi deserunt reiciendis
+        modi
+        reprehenderit illum dolorem tempore quos.
+      </div>
+
+      <div class="d-flex post_footer">
+        <ul>
+          <li>Comments</li>
+          <li>Read Later</li>
+          <li>User</li>
+          <li>Voting</li>
+        </ul>
+        <span class="badges ml-auto">
+          <ul>
+            <li>Useful</li>
+            <li>Educational</li>
+            <li>Inforamtive</li>
+          </ul>
+        </span>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+</div>
+
+{{!-- left menu --}}
+<div class="left_menu">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Speakit</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText"
+      aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+    </div>
+  </nav>
+  <div class="subspeaks_title d-flex justify-content-start">
+    <span id="subspeaks_title">MY SUBSPEAKS</span>
   </div>
 </div>
 
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="/js/index.js"></script>
+{{!-- right menu --}}
+<div class="right_menu">
+  <div class="username d-flex justify-content-center">
+    Username
+  </div>
+</div>
