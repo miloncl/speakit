@@ -1,7 +1,10 @@
 module.exports = function(sequelize, DataTypes) {
     var subspeaks = sequelize.define("Subspeaks", {
-      text: DataTypes.STRING,
-      description: DataTypes.TEXT
+      name: DataTypes.STRING,
+      description: DataTypes.TEXT,
+      views: DataTypes.INTERGER,
+      numberofsub: DataTypes.INTERGER,
+      icon: DataTypes.TEXT
     });
-    return Example;
+    return Subspeaks;
   };
