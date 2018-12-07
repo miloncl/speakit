@@ -1,4 +1,5 @@
 module.exports = function(sequelize, DataTypes) {
+
     var users = sequelize.define("Users", {
       userid: DataTypes.STRING,
       email: DataTypes.TEXT,
@@ -8,3 +9,4 @@ module.exports = function(sequelize, DataTypes) {
     });
     return users;
   };
+
