@@ -27,7 +27,7 @@ CREATE TABLE Posts (
 
 CREATE TABLE Subspeaks (
   id INTEGER AUTO_INCREMENT NOT NULL,
-  user_name VARCHAR(300),
+  name VARCHAR(300),
   views VARCHAR(100),
   description VARCHAR(100),
   numberofsub VARCHAR(100),

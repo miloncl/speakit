@@ -23,15 +23,13 @@
   </div>
   <div class="row">
 
-    {{!-- Delete this button --}}
-    <form action="/s/comments" method="POST">
-      <button type="submit">Test</button>
-    </form>
+
     {{!-- posts --}}
     <div class="post_container">
 
       <div class="post_title_container d-flex">
         <h3 class="title">Temporary Post</h3>
+        <span class="subspeak_name ml-auto">test</span>
       </div>
 
       <div class="post_description"> Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis nam non quis,
@@ -92,7 +90,7 @@
     <ul>
       <li><a href="/"><i class="far fa-newspaper" id="myFeed"></i></a></li>
       <li><a href="/"><i class="fas fa-cog" id="settings"></i></li>
-      <li><button type="button" data-toggle="modal" data-target="#ssModal"><i class="far fa-edit" id="createPost"></i></button></li>
+      <li><a href="/s/subspeaks"><i class="far fa-edit" id="createPost"></i></a></li>
       <li><button type="button" data-toggle="modal" data-target="#myModal"><i class="fas fa-pen-nib" id="createSS"></i></button></li>
     </ul>
   </div>
@@ -127,27 +125,23 @@
 
 
 {{!-- Subspeak Modal --}}
-<div class="container">
-
-  <!-- Modal -->
-  <div class="modal fade" id="ssModal" role="dialog">
-    <div class="modal-dialog">
-
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-body">
-          <div class="loginmodal-container">
-            <h1>Login</h1><br>
-            <form action="/s/subspeaks" method="POST">
-              <input type="text" name="subspeakname" placeholder="Add a name for your subspeak">
-              <input type="password" name="subspeakdescription" placeholder="Add a short description">
-              <input type="submit" name="create" class="login loginmodal-submit" value="Create">
-            </form>
-          </div>
-        </div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
-
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
     </div>
   </div>
-
 </div>

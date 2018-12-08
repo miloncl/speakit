@@ -125,21 +125,41 @@ module.exports = function (app) {
     });
   })
 
-  app.post("/s/subspeaks", function(req, res){
-    db.Subspeaks.create({ description: 'foo', views: 'bar', numberofsub: 5, icon: 'hello' }).then(task => {
+  app.get("/s/subspeaks", function (req, res) {
+    res.render("createss", {})
+  });
+
+  app.post("/s/subspeaks", function (req, res) {
+    db.Subspeaks.create({
+      name: req.body.name,
+      description: req.body.description,
+      views: 0,
+      numberofsub: 1,
+      icon: 'hello'
+    }).then(task => {
+      console.log(`Created Subspeak : ${req.body.name}`)
       // you can now access the newly created task via the variable task
     })
   })
 
-  app.post("/s/posts", function(req, res){
-    db.Post.create({ post_text: 'foo', tags: 'bar', categories: '', views: 5, title: '', }).then(task => {
+  app.post("/s/posts", function (req, res) {
+    db.Post.create({
+      post_text: 'foo',
+      tags: 'bar',
+      categories: '',
+      views: 5,
+      title: '',
+    }).then(task => {
       // you can now access the newly created task via the variable task
     })
   })
 
-//this route is not working
-  app.post("/s/comments", function(req, res){
-    db.Comments.create({ comments: 'foo', voting: 'bar',}).then(task => {
+  //this route is not working
+  app.post("/s/comments", function (req, res) {
+    db.Comments.create({
+      comments: 'foo',
+      voting: 'bar',
+    }).then(task => {
       // you can now access the newly created task via the variable task
     })
   })
