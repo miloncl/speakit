@@ -117,6 +117,26 @@ module.exports = function(app) {
       res.redirect('/'); //Inside a callback… bulletproof!
     });
   })
+
+  app.post("/s/subspeaks", function(req, res){
+    db.Subspeaks.create({ description: 'foo', views: 'bar', numberofsub: 5, icon: 'hello' }).then(task => {
+      // you can now access the newly created task via the variable task
+    })
+  })
+
+  app.post("/s/posts", function(req, res){
+    db.Post.create({ post_text: 'foo', tags: 'bar', categories: '', views: 5, title: '', }).then(task => {
+      // you can now access the newly created task via the variable task
+    })
+  })
+
+//this route is not working
+  app.post("/s/comments", function(req, res){
+    db.Comments.create({ comments: 'foo', voting: 'bar',}).then(task => {
+      // you can now access the newly created task via the variable task
+    })
+  })
+
   // Delete an example by id
   app.delete("/api/examples/:id", function(req, res) {
     db.Example.destroy({ where: { id: req.params.id } }).then(function(
