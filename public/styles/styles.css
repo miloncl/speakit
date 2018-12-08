@@ -17,6 +17,15 @@ ul li {
   float: left;
 }
 
+.fa,
+.far,
+.fas {
+  font-family: "Font Awesome 5 Free";
+  font-size: 20px;
+  margin: auto;
+  padding: 15px;
+}
+
 .navbar-brand {
   padding-left: 14px;
 }
