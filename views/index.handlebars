@@ -83,38 +83,47 @@
 <div class="right_menu">
   <div class="username d-flex justify-content-center">
     {{#if user}}
-    Username
+    Logged in
+    <a href="/logout">Logout</a>
     {{else}}
-    <a href="/login">Login</a>
+    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Login</button>
     {{/if}}
+  </div>
+  <div class="subspeaks_title d-flex justify-content-start">
+    <ul>
+      <li><a href="/"><i class="far fa-newspaper" id="myFeed"></i></a></li>
+      <li><a href="/"><i class="fas fa-cog" id="settings"></i></li>
+      <li><button type="button" data-toggle="modal" data-target="#ssModal"><i class="far fa-edit" id="createPost"></i></button></li>
+      <li><button type="button" data-toggle="modal" data-target="#myModal"><i class="fas fa-pen-nib" id="createSS"></i></button></li>
+    </ul>
   </div>
 </div>
 
 {{!-- Login Modal --}}
 <div class="container">
-  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Login</button>
 
   <!-- Modal -->
   <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
-    
+
       <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-body">
           <div class="loginmodal-container">
-              <h1>Login</h1><br>
-            <form>
-              <input type="text" name="user" placeholder="Username">
-              <input type="password" name="pass" placeholder="Password">
+            <h1>Login</h1><br>
+            <form action="/login" method="POST">
+              <input type="text" name="username" placeholder="Username">
+              <input type="password" name="password" placeholder="Password">
               <input type="submit" name="login" class="login loginmodal-submit" value="Login">
             </form>
-      
+            <p>Dont have an account <a href="/register">Register</a></p>
           </div>
         </div>
       </div>
-      
+
     </div>
   </div>
+<<<<<<< HEAD
   
 </div>
 
@@ -156,4 +165,34 @@
     </div>
   </div>
   
+=======
+
+</div>
+
+
+{{!-- Subspeak Modal --}}
+<div class="container">
+
+  <!-- Modal -->
+  <div class="modal fade" id="ssModal" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="loginmodal-container">
+            <h1>Login</h1><br>
+            <form action="/s/subspeaks" method="POST">
+              <input type="text" name="subspeakname" placeholder="Add a name for your subspeak">
+              <input type="password" name="subspeakdescription" placeholder="Add a short description">
+              <input type="submit" name="create" class="login loginmodal-submit" value="Create">
+            </form>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+>>>>>>> api
 </div>
