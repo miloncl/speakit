@@ -1,7 +1,11 @@
 <div class="container">
-  <form action="">
-    <input type="email">
-    <input type="password">
+  {{title}}
+  <form action="/login" method="POST">
+    <input type="text" name="username" placeholder="username">
+    <input type="password" name="password" placeholder="password">
     <button type="submit">Login</button>
   </form>
+  <a href="/">Home</a>
+  <a href="/register">Register</a>
+
 </div>

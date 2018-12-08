@@ -41,10 +41,14 @@ ul li {
   margin-right: 313px;
 }
 
+.search_bar {
+  border: 1px solid #0000002e;
+}
+
 .navbar {
   z-index: 9999;
   margin: 0;
-  border-bottom: 1px solid #00000022;
+  border-bottom: 1px solid #0000002e;
   max-height: 76px;
   height: 100%;
   background-color: #00000000 !important;
@@ -52,7 +56,7 @@ ul li {
 
 #title_row {
   width: 100%;
-  border-bottom: 1px solid #00000022;
+  border-bottom: 1px solid #0000002e;
   padding: 0 30px 0 30px;
   max-height: 87px;
   height: 100%;
@@ -79,13 +83,13 @@ ul li {
   height: 100%;
   width: 100%;
   max-width: 313px;
-  box-shadow: 0px 3px 6px #00000022;
+  box-shadow: 0px 3px 6px #0000002e;
 }
 
 
 .subspeaks_title {
   align-items: center;
-  border-bottom: 1px solid #00000022;
+  border-bottom: 1px solid #0000002e;
   max-height: 86px;
   height: 100%;
   padding-left: 30px;
@@ -95,12 +99,12 @@ ul li {
   background-color: #ffffff;
   max-width: 1200px;
   margin: auto;
-  border: 1px solid #00000022;
+  border: 1px solid #0000002e;
   margin-top: 40px;
 }
 
 .post_title_container {
-  border-bottom: 1px solid #00000022;
+  border-bottom: 1px solid #0000002e;
   padding: 0 30px 0 30px;
 }
 
@@ -110,7 +114,7 @@ ul li {
 
 .post_footer {
 
-  border-top: 1px solid #00000022;
+  border-top: 1px solid #0000002e;
 }
 
 .right_menu {
@@ -121,7 +125,7 @@ ul li {
   height: 100%;
   width: 100%;
   max-width: 313px;
-  box-shadow: 0px 3px 6px #00000022;
+  box-shadow: 0px 3px 6px #0000002e;
 
 }
 
@@ -129,7 +133,7 @@ ul li {
   border-radius: 0px;
   background-color: #ffffff;
   color: #000000;
-  border-bottom: 1px solid #00000022;
+  border-bottom: 1px solid #0000002e;
   max-height: 76px;
   height: 100%;
   align-items: center;
