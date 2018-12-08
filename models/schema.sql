@@ -7,7 +7,7 @@ CREATE TABLE Users(
   id INTEGER AUTO_INCREMENT NOT NULL,
   user_name VARCHAR(300) UNIQUE,
   user_email VARCHAR(250),
-  password Varchar(20),
+  password Varchar(300),
   createdAt DATE,
   updatedAt DATE,
   PRIMARY KEY (id)
