@@ -10,12 +10,13 @@ var PORT = process.env.PORT || 3000;
 var session = require('express-session');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-var session = require('express-session');
 var MySQLStore = require('express-mysql-session')(session);
 var bcrypt = require('bcrypt');
 
 // Middleware
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({
+  extended: false
+}));
 app.use(express.json());
 app.use(express.static("public"));
 app.use(expressValidator());
@@ -53,28 +54,36 @@ app.set("view engine", "handlebars");
 require("./routes/apiRoutes")(app);
 
 passport.use(new LocalStrategy(
-  function(username, password, done) {
-    
+  function (username, password, done) {
+
     //once the user sends the login info find the username in the db. 
-    db.Users.findOne({where: { user_name: username}}).then((results) => {
-      if(results.length === 0){
+    db.Users.findOne({
+      where: {
+        user_name: username
+      }
+    }).then((results) => {
+      if (results.length === 0) {
         //there is no user in the db
         done(null, false);
       }
       var checkpw = bcrypt.compareSync(password, results.password);
 
-      if(checkpw === true){
+      if (checkpw === true) {
 
-          return done(null, {user_id: results.id});
+        return done(null, {
+          user_id: results.id
+        });
       } else {
-          return done(null, false);
+        return done(null, false);
       }
 
     })
   }
 ));
 
-var syncOptions = { force: false };
+var syncOptions = {
+  force: false
+};
 
 // If running a test, set syncOptions.force to true
 // clearing the `testdb`
@@ -83,8 +92,8 @@ if (process.env.NODE_ENV === "test") {
 }
 
 // Starting the server, syncing our models ------------------------------------/
-db.sequelize.sync(syncOptions).then(function() {
-  app.listen(PORT, function() {
+db.sequelize.sync(syncOptions).then(function () {
+  app.listen(PORT, function () {
     console.log(
       "==> 🌎  Listening on port %s. Visit http://localhost:%s/ in your browser.",
       PORT,
