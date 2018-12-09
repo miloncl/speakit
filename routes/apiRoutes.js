@@ -31,8 +31,8 @@ module.exports = function (app) {
           })
           .then(function (results) {
 
-
-            if (results) {
+            console.log(results.length != 0 )
+            if (results != 0) {
               // JSON.stringify(results[i].subspeak_name) 
               console.log("results: " + JSON.stringify(results))
               console.log("length: " + results.length)
@@ -189,7 +189,8 @@ module.exports = function (app) {
       console.log(result)
       if (result) {
         res.render("subspeaks", {
-          subspeakName: result.name
+          subspeakName: result.name,
+          subspeakId: result.id
         })
       } else {
 
@@ -203,10 +204,10 @@ module.exports = function (app) {
   app.post("/api/subscribe", function (req, res) {
     console.log(req.body)
 
-    // db.SubbedSubspeaks.create({
-    //   subspeak_id: results,
-    //   user_id: req.user
-    // })
+    db.SubbedSubspeaks.create({
+      subspeak_name: results.name,
+      user_id: req.user
+    })
 
   })
 

@@ -99,7 +99,7 @@ $("#createSSForm").submit(function (event){
 
 $("#ssSubscribe").click(function() {
   var data = {
-    name: $(this).attr("data-subspeak")
+    name: $("#ssSubscribe").attr("data-subspeak")
   }
   API.subscribe(data).then(function (){
 
