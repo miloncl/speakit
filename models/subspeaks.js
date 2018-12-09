@@ -6,7 +6,6 @@ module.exports = function (sequelize, DataTypes) {
     numberofsubs: DataTypes.INTEGER,
     icon: DataTypes.TEXT,  
     createdBy: DataTypes.INTEGER,
-
   });
   return Subspeaks;
 };

@@ -3,7 +3,8 @@ var expressValidator = require("express-validator");
 var bcrypt = require('bcrypt');
 var saltRounds = 10;
 var passport = require('passport');
-
+var ssArray= [];
+var indexCount= 0;
 module.exports = function (app) {
   // Get all examples
   app.get("/api/examples", function (req, res) {
@@ -23,20 +24,42 @@ module.exports = function (app) {
         }
       }).then((userInfo) => {
 
-        console.log("USERNAME: " + userInfo.user_name);
         db.SubbedSubspeaks.findAll({
             where: {
               user_id: userInfo.id
             }
           })
           .then(function (results) {
-            
+
+
             if (results) {
-              res.render("index", {
-                user: req.isAuthenticated(),
-                username: userInfo.user_name,
-                subspeaks: results
-              });
+              // JSON.stringify(results[i].subspeak_name) 
+              console.log("results: " + JSON.stringify(results))
+              console.log("length: " + results.length)
+              for (let i = 0; i < results.length; i++) {
+                db.Subspeaks.findAll({
+                  where: {
+                    name: results[i].subspeak_name
+                  }
+                }).then(x => {
+                  ssArray.push(x[0]);
+                  console.log("this is x: " + x)
+                  if (indexCount === results.length-1) {
+
+                    console.log(`Array: ${JSON.stringify(ssArray)}`)
+                    res.render("index", {
+                      user: req.isAuthenticated(),
+                      username: userInfo.user_name,
+                      subspeaks: ssArray
+                    });
+                  } else {
+                    indexCount++;
+                  }
+                })
+              
+              }
+
+
             } else {
               res.render("index", {
                 user: req.isAuthenticated(),
@@ -179,19 +202,12 @@ module.exports = function (app) {
 
   app.post("/api/subscribe", function (req, res) {
     console.log(req.body)
-    db.Subspeaks.findOne({
-      where: {
-        name: req.body.name
-      }
-    }).then(result => {
-      console.log("results: " + result)
-      // db.SubbedSubspeaks.create({
-      //   subspeak_id: results,
-      //   subspeak_name: results,
-      //   subspeak_description: results,
-      //   user_id: req.user
-      // })
-    })
+
+    // db.SubbedSubspeaks.create({
+    //   subspeak_id: results,
+    //   user_id: req.user
+    // })
+
   })
 
   //get all data from client js file
@@ -209,12 +225,10 @@ module.exports = function (app) {
       //automatically subscibe the user to their subspeak 
       console.log(task.id)
       db.SubbedSubspeaks.create({
-        
-        subspeak_id: task.id,
+
         subspeak_name: task.name,
-        subspeak_description: task.description,
         user_id: req.user
-      }) 
+      })
     })
   })
 
