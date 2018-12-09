@@ -3,10 +3,11 @@ var expressValidator = require("express-validator");
 var bcrypt = require('bcrypt');
 var saltRounds = 10;
 var passport = require('passport');
-var ssArray= [];
-var indexCount= 0;
+
 module.exports = function (app) {
   // Get all examples
+  var ssArray = [];
+var indexCount = 0;
   app.get("/api/examples", function (req, res) {
     db.Example.findAll({}).then(function (dbExamples) {
       res.json(dbExamples);
@@ -16,22 +17,22 @@ module.exports = function (app) {
   //index page
   // Load index page
   app.get("/", function (req, res) {
-
+    console.log("anything")
     if (req.isAuthenticated()) {
+        console.log(req.user.user_id)
       db.Users.findOne({
         where: {
-          id: req.user
+          id: req.user.user_id
         }
       }).then((userInfo) => {
-
         db.SubbedSubspeaks.findAll({
             where: {
-              user_id: userInfo.id
+              user_id: req.user.user_id
             }
           })
           .then(function (results) {
 
-            console.log(results.length != 0 )
+            console.log(results.length != 0)
             if (results != 0) {
               // JSON.stringify(results[i].subspeak_name) 
               console.log("results: " + JSON.stringify(results))
@@ -44,7 +45,7 @@ module.exports = function (app) {
                 }).then(x => {
                   ssArray.push(x[0]);
                   console.log("this is x: " + x)
-                  if (indexCount === results.length-1) {
+                  if (indexCount === results.length - 1) {
 
                     console.log(`Array: ${JSON.stringify(ssArray)}`)
                     res.render("index", {
@@ -56,7 +57,7 @@ module.exports = function (app) {
                     indexCount++;
                   }
                 })
-              
+
               }
 
 

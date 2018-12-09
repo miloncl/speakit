@@ -71,7 +71,7 @@ passport.use(new LocalStrategy(
       if (checkpw === true) {
 
         return done(null, {
-          user_id: results.id
+          id: results.id
         });
       } else {
         return done(null, false);
