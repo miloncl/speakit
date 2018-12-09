@@ -4,5 +4,7 @@ module.exports = function(sequelize, DataTypes) {
     password: DataTypes.TEXT,
     user_name: DataTypes.TEXT,
   });
+
+
   return users;
 };

@@ -1,0 +1,11 @@
+<div class="container">
+  {{#if subspeakName}}
+  {{subspeakName}}
+  {{else}}
+  Subspeak not found. Create it!
+  {{/if}}
+  <a href="/">Home</a>
+  {{#if subspeakName}}
+  <button id="ssSubscribe" data-subspeak={{subspeakName}}>Subscribe</button>
+  {{/if}}
+</div>

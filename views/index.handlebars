@@ -63,7 +63,7 @@
 {{!-- left menu --}}
 <div class="left_menu">
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Speakit</a>
+    <a class="navbar-brand" href="#"> <span class="logoSpeak">Speak</span><span class="logoIt">it</span></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText"
       aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -74,16 +74,26 @@
   <div class="subspeaks_title d-flex justify-content-start">
     <span id="subspeaks_title">MY SUBSPEAKS</span>
   </div>
+  {{#if subspeaks}}
+  {{#each subspeaks}}
+
+  <div class="sidebar_subspeaks d-flex flex-column align-items-start justify-content-center">
+    <h3 class="subspeak_name"> <a href="/s/{{this.subspeak_name}}">{{this.subspeak_name}}</a></h3>
+    <p class="subspeak_description">{{this.subspeak_description}}</p>
+  </div>
+  {{/each}}
+  {{/if}}
+
 </div>
 
 {{!-- right menu --}}
 <div class="right_menu">
   <div class="username d-flex justify-content-center">
     {{#if user}}
-    Logged in
+    {{username}}
     <a href="/logout">Logout</a>
     {{else}}
-    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Login</button>
+    <button type="button" class="btn btn-info btn-lg mainBtn" data-toggle="modal" data-target="#myModal"><i class="fas fa-sign-in-alt loginIcon"></i>Login</button>
     {{/if}}
   </div>
   <div class="subspeaks_title d-flex justify-content-start">
@@ -91,7 +101,8 @@
       <li><a href="/"><i class="far fa-newspaper" id="myFeed"></i></a></li>
       <li><a href="/"><i class="fas fa-cog" id="settings"></i></li>
       <li><a href="/s/subspeaks"><i class="far fa-edit" id="createPost"></i></a></li>
-      <li><button type="button" data-toggle="modal" data-target="#myModal"><i class="fas fa-pen-nib" id="createSS"></i></button></li>
+      <li><button type="button" data-toggle="modal" data-target="#ssModal" id="createSSBtn"><i class="fas fa-pen-nib"
+            id="createSS"></i></button></li>
     </ul>
   </div>
 </div>
@@ -106,15 +117,13 @@
       <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-body">
-          <div class="loginmodal-container">
-            <h1>Login</h1><br>
-            <form action="/login" method="POST">
-              <input type="text" name="username" placeholder="Username">
-              <input type="password" name="password" placeholder="Password">
-              <input type="submit" name="login" class="login loginmodal-submit" value="Login">
-            </form>
-            <p>Dont have an account <a href="/register">Register</a></p>
-          </div>
+          <h1>Login</h1>
+          <form action="/login" method="POST">
+            <input type="text" name="username" placeholder="Username">
+            <input type="password" name="password" placeholder="Password">
+            <input type="submit" name="login" class="login loginmodal-submit" value="Login">
+          </form>
+          <p>Dont have an account <a href="/register">Register</a></p>
         </div>
       </div>
 
@@ -125,57 +134,37 @@
 
 
 {{!-- Subspeak Modal --}}
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-{{!-- Subspeak Modal --}}
 <div class="container">
-  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Subspeak</button>
 
   <!-- Modal -->
-  <div class="modal fade" id="myModal" role="dialog">
+  <div class="modal fade" id="ssModal" role="dialog">
     <div class="modal-dialog">
-    
+
       <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Register</h4>
+          <h4 class="modal-title">Create Subspeak</h4>
         </div>
         <div class="modal-body subspeak-body">
-          <form action="/action_page.php">
-                        <label for="name">Name</label>
-                        <input type="text" id="username" name="name" placeholder="Enter a name for your subspeak">
-            
-                        <label for="description">Description</label>
-                        <input type="text" id="email" name="email" placeholder="Enter a short description">
-                        
-                        <input type="submit" class="subspeak-modal" value="Create">
 
-                    </form>
+          {{#if errors}}
+          {{#each errors}}
+          <div class="alert alert-danger">
+            {{this.msg}}
+          </div>
+          {{/each}}
+          {{/if}}
+          <form id="createSSForm">
+            <input type="text" id="subspeakName" name="name" placeholder="name">
+            <input type="text" id="subspeakDesc" name="description" placeholder="description">
+            <button type="submit">Submit</button>
+          </form>
+
+          </form>
         </div>
-       
+
       </div>
-      
+
     </div>
   </div>
-  

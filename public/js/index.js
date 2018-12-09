@@ -4,16 +4,29 @@ var $exampleDescription = $("#example-description");
 var $submitBtn = $("#submit");
 var $exampleList = $("#example-list");
 
+let subspeakName = $('#subspeakName');
+let subspeakDesc = $('#subspeakDesc');
+
 // The API object contains methods for each kind of request we'll make
 var API = {
-  saveExample: function(example) {
+  createSubspeak: function(data) {
     return $.ajax({
       headers: {
         "Content-Type": "application/json"
       },
       type: "POST",
-      url: "api/examples",
-      data: JSON.stringify(example)
+      url: "/api/subspeaks",
+      data: JSON.stringify(data)
+    });
+  },
+  subscribe: function(data) {
+    return $.ajax({
+      headers: {
+        "Content-Type": "application/json"
+      },
+      type: "POST",
+      url: "/api/subspeaks",
+      data: JSON.stringify(data)
     });
   },
   getExamples: function() {
@@ -59,28 +72,39 @@ var refreshExamples = function() {
   });
 };
 
-// handleFormSubmit is called whenever we submit a new example
-// Save the new example to the db and refresh the list
-var handleFormSubmit = function(event) {
+
+//create a subspeak form 
+$("#createSSForm").submit(function (event){
+
+  //data gets sent to the api rout /s/subspeaks
   event.preventDefault();
 
-  var example = {
-    text: $exampleText.val().trim(),
-    description: $exampleDescription.val().trim()
-  };
-
-  if (!(example.text && example.description)) {
-    alert("You must enter an example text and description!");
-    return;
+  var data = {
+    name: subspeakName.val().trim(),
+    views: 0,
+    description: subspeakDesc.val().trim(),
+    numberofsubs: 1,
+    icon: "hello",
+    createdBy: "" 
   }
 
-  API.saveExample(example).then(function() {
-    refreshExamples();
+  API.createSubspeak(data).then(function() {
+    // refreshExamples();
   });
 
-  $exampleText.val("");
-  $exampleDescription.val("");
-};
+  subspeakName.val("");
+  subspeakDesc.val("");
+
+})
+
+$("#ssSubscribe").click(function() {
+  var data = {
+    name: $(this).attr("data-subspeak")
+  }
+  API.subscribe(data).then(function (){
+
+  })
+})
 
 // handleDeleteBtnClick is called when an example's delete button is clicked
 // Remove the example from the db and refresh the list
@@ -94,6 +118,3 @@ var handleDeleteBtnClick = function() {
   });
 };
 
-// Add event listeners to the submit and delete buttons
-$submitBtn.on("click", handleFormSubmit);
-$exampleList.on("click", ".delete", handleDeleteBtnClick);

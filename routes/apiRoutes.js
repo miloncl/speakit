@@ -16,12 +16,43 @@ module.exports = function (app) {
   // Load index page
   app.get("/", function (req, res) {
 
-    //testing to see if we're logged in 
-    console.log(req.user);
-    console.log(req.isAuthenticated());
-    res.render("index", {
-      user: req.isAuthenticated()
-    });
+    if (req.isAuthenticated()) {
+      db.Users.findOne({
+        where: {
+          id: req.user
+        }
+      }).then((userInfo) => {
+
+        console.log("USERNAME: " + userInfo.user_name);
+        db.SubbedSubspeaks.findAll({
+            where: {
+              user_id: userInfo.id
+            }
+          })
+          .then(function (results) {
+            
+            if (results) {
+              res.render("index", {
+                user: req.isAuthenticated(),
+                username: userInfo.user_name,
+                subspeaks: results
+              });
+            } else {
+              res.render("index", {
+                user: req.isAuthenticated(),
+                username: userInfo.user_name,
+              });
+            }
+          })
+
+      });
+    } else {
+
+      //testing to see if we're logged in 
+      res.render("index", {
+        user: req.isAuthenticated(),
+      });
+    }
   });
 
   //profile route
@@ -125,20 +156,65 @@ module.exports = function (app) {
     });
   })
 
-  app.get("/s/subspeaks", function (req, res) {
-    res.render("createss", {})
+  //load a subspeak 
+  app.get("/s/:subspeak", function (req, res) {
+    db.Subspeaks.findOne({
+      where: {
+        name: req.params.subspeak
+      }
+    }).then((result) => {
+      console.log(result)
+      if (result) {
+        res.render("subspeaks", {
+          subspeakName: result.name
+        })
+      } else {
+
+        res.render("subspeaks", {
+
+        })
+      }
+    })
   });
 
-  app.post("/s/subspeaks", function (req, res) {
+  app.post("/api/subscribe", function (req, res) {
+    console.log(req.body)
+    db.Subspeaks.findOne({
+      where: {
+        name: req.body.name
+      }
+    }).then(result => {
+      console.log("results: " + result)
+      // db.SubbedSubspeaks.create({
+      //   subspeak_id: results,
+      //   subspeak_name: results,
+      //   subspeak_description: results,
+      //   user_id: req.user
+      // })
+    })
+  })
+
+  //get all data from client js file
+  app.post("/api/subspeaks", function (req, res) {
+    console.log(req.body)
     db.Subspeaks.create({
       name: req.body.name,
       description: req.body.description,
-      views: 0,
-      numberofsub: 1,
-      icon: 'hello'
+      views: req.body.views,
+      numberofsubs: req.body.numberofsubs,
+      icon: req.body.icon,
+      createdBy: req.user
     }).then(task => {
       console.log(`Created Subspeak : ${req.body.name}`)
-      // you can now access the newly created task via the variable task
+      //automatically subscibe the user to their subspeak 
+      console.log(task.id)
+      db.SubbedSubspeaks.create({
+        
+        subspeak_id: task.id,
+        subspeak_name: task.name,
+        subspeak_description: task.description,
+        user_id: req.user
+      }) 
     })
   })
 

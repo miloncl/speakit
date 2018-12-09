@@ -5,7 +5,7 @@ USE speakit_db;
 
 CREATE TABLE Users(
   id INTEGER AUTO_INCREMENT NOT NULL,
-  user_name VARCHAR(300) UNIQUE,
+  user_name VARCHAR(300) UNIQUE, 
   user_email VARCHAR(250),
   password Varchar(300),
   createdAt DATE,
@@ -30,9 +30,20 @@ CREATE TABLE Subspeaks (
   name VARCHAR(300),
   views VARCHAR(100),
   description VARCHAR(100),
-  numberofsub VARCHAR(100),
+  numberofsubs VARCHAR(100),
   icon VARCHAR(100),
    createdAt DATE,
+  updatedAt DATE,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE SubbedSubspeaks (
+  id INTEGER AUTO_INCREMENT NOT NULL,
+  subspeak_id INTEGER,
+  subspeak_name VARCHAR(300)
+  subspeak_description VARCHAR(100),
+  user_id INTEGER,
+  createdAt DATE,
   updatedAt DATE,
   PRIMARY KEY (id)
 );
