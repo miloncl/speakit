@@ -5,6 +5,12 @@ module.exports = function(sequelize, DataTypes) {
     user_name: DataTypes.TEXT,
   });
 
-
-  return users;
+  users.associate = function(models) {
+    // Associating Author with Posts
+    // When an Author is deleted, also delete any associated Posts
+    users.hasMany(models.SubbedSubspeaks, {
+      onDelete: "cascade"
+    });
+  };
+  return users; 
 };

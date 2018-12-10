@@ -5,121 +5,102 @@ var saltRounds = 10;
 var passport = require('passport');
 
 module.exports = function (app) {
-  // Get all examples
-  var ssArray = [];
-var indexCount = 0;
-  app.get("/api/examples", function (req, res) {
-    db.Example.findAll({}).then(function (dbExamples) {
-      res.json(dbExamples);
-    });
-  });
 
   //index page
   // Load index page
-  app.get("/", function (req, res) {
-    console.log("anything")
+  // app.get("/", function (req, res) {
+
+  //   let userId = checkForMultipleUsers(req);
+
+  //   console.log("anything")
+  //   if (req.isAuthenticated()) {
+  //     console.log(userId)
+  //     db.Users.findOne({
+  //       where: {
+  //         id: userId
+  //       },
+  //       include: [{
+  //         model: db.SubbedSubspeaks,
+  //         where: {
+  //           UserId: userId
+  //         },
+  //         required: false
+  //       }]
+  //     }).then((userInfo) => {
+
+
+  //       console.log("USERINFO: " + JSON.stringify(userInfo));
+
+  //       res.render("index", {
+  //         user: req.isAuthenticated(),
+  //         username: userInfo.user_name,
+  //         subspeaks: userInfo.SubbedSubspeaks
+  //       });
+
+  //     });
+  //   } else {
+
+  //     //testing to see if we're logged in 
+  //     res.render("index", {
+  //       user: req.isAuthenticated(),
+  //     });
+  //   }
+  // });
+
+  app.get("/api/checkLogin", (req, res) => {
+    let userId = checkForMultipleUsers(req);
+    let userObj= {}
     if (req.isAuthenticated()) {
-        console.log(req.user.user_id)
+
       db.Users.findOne({
         where: {
-          id: req.user.user_id
-        }
+          id: userId
+        },
+        include: [{
+          model: db.SubbedSubspeaks,
+          where: {
+            UserId: userId
+          },
+          required: false
+        }]
       }).then((userInfo) => {
-        db.SubbedSubspeaks.findAll({
-            where: {
-              user_id: req.user.user_id
-            }
-          })
-          .then(function (results) {
-
-            console.log(results.length != 0)
-            if (results != 0) {
-              // JSON.stringify(results[i].subspeak_name) 
-              console.log("results: " + JSON.stringify(results))
-              console.log("length: " + results.length)
-              for (let i = 0; i < results.length; i++) {
-                db.Subspeaks.findAll({
-                  where: {
-                    name: results[i].subspeak_name
-                  }
-                }).then(x => {
-                  ssArray.push(x[0]);
-                  console.log("this is x: " + x)
-                  if (indexCount === results.length - 1) {
-
-                    console.log(`Array: ${JSON.stringify(ssArray)}`)
-                    res.render("index", {
-                      user: req.isAuthenticated(),
-                      username: userInfo.user_name,
-                      subspeaks: ssArray
-                    });
-                  } else {
-                    indexCount++;
-                  }
-                })
-
-              }
 
 
-            } else {
-              res.render("index", {
-                user: req.isAuthenticated(),
-                username: userInfo.user_name,
-              });
-            }
-          })
+        console.log("USERINFO: " + JSON.stringify(userInfo));
 
+         userObj = {
+          id: userId,
+          username: userInfo.user_name,
+          subspeaks: userInfo.SubbedSubspeaks,
+          logged: true
+        }
+
+        res.json(userObj)
       });
     } else {
-
-      //testing to see if we're logged in 
-      res.render("index", {
-        user: req.isAuthenticated(),
-      });
+      userObj = {
+        id: "",
+        username: "",
+        subspeaks: "",
+        logged: false 
+      }
+      res.json(userObj)
     }
-  });
 
-  //profile route
-  app.get("/profile", function (req, res) {
-    if (req.isAuthenticated()) {
+  
+    
+  })
 
-      res.render("profile", {
-        username: "testing"
-      })
-    } else {
-      //if not authenticated go to register
-      res.redirect("/login");
-    }
-  });
-
-  //load login page
-  app.get("/login", function (req, res) {
-    if (req.isAuthenticated()) {
-
-      res.redirect("/profile")
-    } else {
-      res.render("login", {
-        title: "Login"
-      })
-    }
-  });
 
   //login user
-  app.post("/login", passport.authenticate('local', {
-    successRedirect: '/profile',
-    failureRedirect: '/login'
+  app.post("/api/login", passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: '/',
+    
   }));
 
-
-  //register get route
-  app.get("/register", function (req, res) {
-    res.render("register", {
-      title: "Register"
-    })
-  });
-
   // Create a new user
-  app.post("/register", function (req, res) {
+  app.post("/api/register", function (req, res) {
     //check the fields make sur they're not empty
 
     req.checkBody('username', 'Username cannot be empty.').notEmpty();
@@ -173,26 +154,44 @@ var indexCount = 0;
     }
   });
 
-  app.get('/logout', function (req, res) {
-    req.logout()
-    req.session.destroy(function (err) {
-      res.redirect('/'); //Inside a callback… bulletproof!
-    });
-  })
-
   //load a subspeak 
   app.get("/s/:subspeak", function (req, res) {
+    let userId = checkForMultipleUsers(req);
     db.Subspeaks.findOne({
       where: {
         name: req.params.subspeak
-      }
+      },
+      include: [{
+        model: db.SubbedSubspeaks,
+        where: {
+          UserId: userId
+        },
+        required: false
+      }]
     }).then((result) => {
-      console.log(result)
+      console.log("Load Subspeak: " + JSON.stringify(result.SubbedSubspeaks))
       if (result) {
-        res.render("subspeaks", {
-          subspeakName: result.name,
-          subspeakId: result.id
-        })
+        if (result.SubbedSubspeaks.length === 0) {
+          res.render("subspeaks", {
+            subspeakName: result.name,
+            subspeakId: result.id,
+            subspeakDescription: result.description,
+            subscribed: false
+          })
+        } else {
+
+          for (let i = 0; i < result.SubbedSubspeaks.length; i++) {
+            if (result.SubbedSubspeaks[i].SubspeakId === result.id) {
+              res.render("subspeaks", {
+                subspeakName: result.name,
+                subspeakId: result.id,
+                subspeakDescription: result.description,
+                subscribed: true
+              })
+              return;
+            }
+          }
+        }
       } else {
 
         res.render("subspeaks", {
@@ -201,36 +200,92 @@ var indexCount = 0;
       }
     })
   });
+  //get the users subscriptions
+  app.get("/api/subscribe", function (req, res) {
+    let userId = checkForMultipleUsers(req);
 
+    db.SubbedSubspeaks.findAll({
+      where: {
+        UserId: userId
+      }
+    }).then((userSubs) => {
+
+
+      console.log("USERINFO: " + JSON.stringify(userSubs));
+
+      res.json(userSubs)
+    })
+  });
+  //subscribe the logged in user to a subspeak
   app.post("/api/subscribe", function (req, res) {
+    let userId = checkForMultipleUsers(req);
     console.log(req.body)
-
+    //create a new sub
     db.SubbedSubspeaks.create({
-      subspeak_name: results.name,
-      user_id: req.user
+      subspeak_name: req.body.name,
+      subspeak_description: req.body.description,
+      SubspeakId: req.body.subspeakId,
+      UserId: userId
+    }).then(result => {
+       res.redirect(`/s/${req.body.name}`)
+   
     })
 
   })
 
+  //unsubscribe a user from the subspeak
+  app.delete("/api/subscribe/:id/:name", function (req, res) {
+    let userId = checkForMultipleUsers(req);
+    db.SubbedSubspeaks.destroy({
+      where: {
+        SubspeakId: req.params.id,
+        UserId: userId
+      }
+    }).then(result => {
+      console.log(`DESTROY : ${JSON.stringify(result)}`)
+      res.redirect(`/s/${req.params.name}`)
+      
+    })
+  })
   //get all data from client js file
   app.post("/api/subspeaks", function (req, res) {
     console.log(req.body)
-    db.Subspeaks.create({
-      name: req.body.name,
-      description: req.body.description,
-      views: req.body.views,
-      numberofsubs: req.body.numberofsubs,
-      icon: req.body.icon,
-      createdBy: req.user
-    }).then(task => {
-      console.log(`Created Subspeak : ${req.body.name}`)
-      //automatically subscibe the user to their subspeak 
-      console.log(task.id)
-      db.SubbedSubspeaks.create({
 
-        subspeak_name: task.name,
-        user_id: req.user
-      })
+    let userId = checkForMultipleUsers(req);
+
+    db.Subspeaks.findOrCreate({
+
+      where: {
+        name: req.body.name
+      },
+      defaults: {
+        name: req.body.name,
+        description: req.body.description,
+        views: req.body.views,
+        numberofsubs: req.body.numberofsubs,
+        icon: req.body.icon,
+        createdBy: userId
+      }
+    }).spread((results, created) => {
+      console.log(`Created Subspeak : ${created}`)
+      if (created === false) {
+        res.render("index", {
+
+          warnings: "That Subspeak already exists"
+        })
+      } else {
+        res.render("index", {
+          warnings: "Subspeak created"
+        })
+
+        //automatically subscibe the user to their subspeak 
+        db.SubbedSubspeaks.create({
+          subspeak_name: results.name,
+          subspeak_description: results.description,
+          SubspeakId: results.id,
+          UserId: userId
+        })
+      }
     })
   })
 
@@ -269,12 +324,21 @@ var indexCount = 0;
     });
   });
 
-  app.get("*", function (req, res) {
-    res.render("404");
-  });
 
 
 };
+
+function checkForMultipleUsers(req) {
+  let userId;
+
+  //check if req.user is an object, if there are multiple users in a table than it is, if there's one than it's not
+  if (typeof req.user !== 'object') {
+    console.log('not an object')
+    return userId = req.user
+  } else {
+    return userId = req.user.id
+  }
+}
 
 //req.login uses these functions 
 passport.serializeUser(function (user_id, done) {

@@ -39,10 +39,8 @@ CREATE TABLE Subspeaks (
 
 CREATE TABLE SubbedSubspeaks (
   id INTEGER AUTO_INCREMENT NOT NULL,
-  subspeak_id INTEGER,
   subspeak_name VARCHAR(300)
   subspeak_description VARCHAR(100),
-  user_id INTEGER,
   createdAt DATE,
   updatedAt DATE,
   PRIMARY KEY (id)

@@ -1,11 +1,45 @@
-<div class="container">
+<div class="wrapper">
+  {{> navbar}}
+
   {{#if subspeakName}}
-  {{subspeakName}}
+
+
+  <div class="row" id="title_row">
+    {{!-- title bar --}}
+    <div class="col-xl-4 d-flex justify-content-start left_col_title ">
+      <div class="title">
+        {{subspeakName}}
+        {{subspeakDescription}}
+      </div>
+    </div>
+    <div class="col-xl-4 d-flex justify-content-center" id="subscribe_btn_div">
+      {{#if subspeakName}}
+      {{#if subscribed}}
+      <button id="ssUnSubscribe" data-subspeak="{{subspeakName}}" data-id="{{subspeakId}}" data-description="{{subspeakDescription}}">
+        Unsubscribe
+      </button>
+      {{else}}
+      <button id="ssSubscribe" data-subspeak="{{subspeakName}}" data-id="{{subspeakId}}" data-description="{{subspeakDescription}}">
+        Subscribe
+      </button>
+      {{/if}}
+      {{/if}}
+    </div>
+    <div class="col-xl-4 d-flex justify-content-end right_col_title">
+      <ul>
+        <li>Useful</li>
+        <li>Informative</li>
+        <li>Educational</li>
+      </ul>
+    </div>
+  </div>
   {{else}}
   Subspeak not found. Create it!
   {{/if}}
-  <a href="/">Home</a>
-  {{#if subspeakName}}
-  <button id="ssSubscribe" data-subspeak={{subspeakName}} data-id={{subspeakId}}>Subscribe</button>
-  {{/if}}
+
+
 </div>
+
+{{> leftBar}}
+
+{{> rightBar}}

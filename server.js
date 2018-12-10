@@ -45,13 +45,15 @@ app.use(passport.session());
 app.engine(
   "handlebars",
   exphbs({
-    defaultLayout: "main"
+    defaultLayout: "main",
+    partialsDir: __dirname + "/views/partials/"
   })
 );
 app.set("view engine", "handlebars");
 
 // Routes
 require("./routes/apiRoutes")(app);
+require("./routes/htmlRoutes")(app);
 
 passport.use(new LocalStrategy(
   function (username, password, done) {
