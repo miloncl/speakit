@@ -1,0 +1,24 @@
+{{!-- Create Post Modal --}}
+<div class="container">
+
+  <!-- Modal -->
+  <div class="modal fade" id="cpModal" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-body">
+          <h1>Create a Post</h1>
+          <form action="/api/post" method="POST">
+            <input type="text" name="subspeakName" placeholder="Enter the Subspeak's name.">
+            <input type="textarea" name="text" placeholder="Enter Text">
+            <input type="submit" name="login" class="login loginmodal-submit" value="Login">
+          </form>
+          <p>Dont have an account <a href="/register">Register</a></p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>

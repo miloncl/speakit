@@ -15,5 +15,13 @@ module.exports = function (sequelize, DataTypes) {
       onDelete: "cascade"
     });
   };
+
+  Subspeaks.associate = function(models) {
+    // Associating Author with Posts
+    // When an Author is deleted, also delete any associated Posts
+    Subspeaks.hasMany(models.Post, {
+      onDelete: "cascade"
+    });
+  };
   return Subspeaks;
 };

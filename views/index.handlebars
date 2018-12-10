@@ -62,65 +62,6 @@
 
 {{> rightBar}}
 
-{{!-- Login Modal --}}
-<div class="container">
 
-  <!-- Modal -->
-  <div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
-
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-body">
-          <h1>Login</h1>
-          <form action="/api/login" method="POST">
-            <input type="text" name="username" placeholder="Username">
-            <input type="password" name="password" placeholder="Password">
-            <input type="submit" name="login" class="login loginmodal-submit" value="Login">
-          </form>
-          <p>Dont have an account <a href="/register">Register</a></p>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-</div>
-
-
-{{!-- Subspeak Modal --}}
-<div class="container">
-
-  <!-- Modal -->
-  <div class="modal fade" id="ssModal" role="dialog">
-    <div class="modal-dialog">
-
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Create Subspeak</h4>
-          {{warnings}}
-        </div>
-        <div class="modal-body subspeak-body">
-
-          {{#if errors}}
-          {{#each errors}}
-          <div class="alert alert-danger">
-            {{this.msg}}
-          </div>
-          {{/each}}
-          {{/if}}
-          <form id="createSSForm">
-            <input type="text" id="subspeakName" name="name" placeholder="name">
-            <input type="text" id="subspeakDesc" name="description" placeholder="description">
-            <button type="submit">Submit</button>
-          </form>
-
-          </form>
-        </div>
-
-      </div>
-
-    </div>
-  </div>
+{{> loginModal}}
+{{> createSSModal}}

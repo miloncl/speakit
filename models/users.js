@@ -11,6 +11,11 @@ module.exports = function(sequelize, DataTypes) {
     users.hasMany(models.SubbedSubspeaks, {
       onDelete: "cascade"
     });
+
+    users.hasMany(models.Post, {
+      onDelete: "cascade"
+    });
   };
+
   return users; 
 };

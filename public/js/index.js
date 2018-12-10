@@ -2,6 +2,9 @@ let subspeakName = $('#subspeakName');
 let subspeakDesc = $('#subspeakDesc');
 let loginUsername = $('#loginUsername');
 let loginPassword = $('#loginPassword');
+let cpSSName = $("#cpSSName");
+let cpSSTitle = $("#cpSSTitle");
+let cpSSTextArea = $("#cpSSTextArea");
 // The API object contains methods for each kind of request we'll make
 var API = {
   checkUser: function () {
@@ -25,6 +28,16 @@ var API = {
       url: "/api/subspeaks",
       data: JSON.stringify(data)
     });
+  },
+  createPost: function (data) {
+    return $.ajax({
+      headers: {
+        "Content-Type": "application/json"
+      }, 
+      type: "POST",
+      url: "/api/createPost",
+      data: JSON.stringify(data)
+    })
   },
   subscribe: function (data) {
     return $.ajax({
@@ -66,13 +79,27 @@ $(document).ready(function () {
       console.log(user);
       if (user.logged === false) {
         let loginBtn = $('<button type="button" class="btn btn-info btn-lg mainBtn" data-toggle="modal" data-target="#myModal"><i class="fas fa-sign-in-alt loginIcon"></i>Login</button>')
+
+        let ul = $(` <ul>
+        <li><a href="/"><i class="far fa-newspaper" id="myFeed"></i></a></li>
+        <li><a href="/"><i class="fas fa-cog" id="settings"></i></li>
+        
+      </ul>`)
         $('.username').append(loginBtn)
+        $('#navList').append(ul)
       } else {
         let username = $(`<p>${user.username}</p>`)
         let logout = $(`<a href="/logout">Logout</a>`);
+        let ul = $(` <ul>
+        <li><a href="/"><i class="far fa-newspaper" id="myFeed"></i></a></li>
+        <li><a href="/"><i class="fas fa-cog" id="settings"></i></li>
+        <li><a href="/createPost"><i class="far fa-edit" id="createPost"></i></a></li>
+        <li><button type="button" data-toggle="modal" data-target="#ssModal" id="createSSBtn"><i class="fas fa-pen-nib"
+              id="createSS"></i></button></li>
+      </ul>`)
         $('.username').append(username);
         $('.username').append(logout);
-
+        $('#navList').append(ul)
         refreshSubscriptions();
       }
     })
@@ -98,7 +125,24 @@ $(document).ready(function () {
     })
   }
 
+  function refreshPosts() {
+    console.log("refresh posts");
+  }
 
+  $("#createPostForm").submit(function (event){
+    event.preventDefault();
+
+    var data = {
+      subspeakName: cpSSName.val().trim(),
+      title: cpSSTitle.val().trim(),
+      text: cpSSTextArea.val()
+    }
+
+    API.createPost(data).then(function() {
+      refreshPosts();
+    })
+
+  })
 
   //form submit for when a user creates a new subspeak
   $("#createSSForm").submit(function (event) {

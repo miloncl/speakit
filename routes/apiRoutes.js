@@ -49,7 +49,7 @@ module.exports = function (app) {
 
   app.get("/api/checkLogin", (req, res) => {
     let userId = checkForMultipleUsers(req);
-    let userObj= {}
+    let userObj = {}
     if (req.isAuthenticated()) {
 
       db.Users.findOne({
@@ -68,7 +68,7 @@ module.exports = function (app) {
 
         console.log("USERINFO: " + JSON.stringify(userInfo));
 
-         userObj = {
+        userObj = {
           id: userId,
           username: userInfo.user_name,
           subspeaks: userInfo.SubbedSubspeaks,
@@ -82,13 +82,11 @@ module.exports = function (app) {
         id: "",
         username: "",
         subspeaks: "",
-        logged: false 
+        logged: false
       }
       res.json(userObj)
     }
 
-  
-    
   })
 
 
@@ -96,7 +94,7 @@ module.exports = function (app) {
   app.post("/api/login", passport.authenticate('local', {
     successRedirect: '/',
     failureRedirect: '/',
-    
+
   }));
 
   // Create a new user
@@ -152,6 +150,30 @@ module.exports = function (app) {
         }
       })
     }
+  });
+
+  app.post("/api/createPost", function (req, res) {
+    let userId = checkForMultipleUsers(req);
+
+    db.Subspeaks.findOne({
+      where: {
+        name: req.body.subspeakName
+      }
+    }).then((result) => {
+      console.log("Results: " + result.id, "Title: " + req.body.title)
+      db.Post.create({
+  
+        defaults: {
+          post_text: req.body.text,
+          title: req.body.title,
+          SubspeakId: result.id,
+          UserId: userId
+        }
+      }).spread((results, created) => {
+        console.log(created)
+      })
+    })
+
   });
 
   //load a subspeak 
@@ -227,8 +249,8 @@ module.exports = function (app) {
       SubspeakId: req.body.subspeakId,
       UserId: userId
     }).then(result => {
-       res.redirect(`/s/${req.body.name}`)
-   
+      res.redirect(`/s/${req.body.name}`)
+
     })
 
   })
@@ -244,7 +266,7 @@ module.exports = function (app) {
     }).then(result => {
       console.log(`DESTROY : ${JSON.stringify(result)}`)
       res.redirect(`/s/${req.params.name}`)
-      
+
     })
   })
   //get all data from client js file

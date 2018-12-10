@@ -1,0 +1,24 @@
+{{!-- Login Modal --}}
+<div class="container">
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-body">
+          <h1>Login</h1>
+          <form action="/api/login" method="POST">
+            <input type="text" name="username" placeholder="Username">
+            <input type="password" name="password" placeholder="Password">
+            <input type="submit" name="login" class="login loginmodal-submit" value="Login">
+          </form>
+          <p>Dont have an account <a href="/register">Register</a></p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>

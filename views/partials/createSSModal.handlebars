@@ -1,0 +1,36 @@
+{{!-- Subspeak Modal --}}
+<div class="container">
+
+  <!-- Modal -->
+  <div class="modal fade" id="ssModal" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Create Subspeak</h4>
+          {{warnings}}
+        </div>
+        <div class="modal-body subspeak-body">
+
+          {{#if errors}}
+          {{#each errors}}
+          <div class="alert alert-danger">
+            {{this.msg}}
+          </div>
+          {{/each}}
+          {{/if}}
+          <form id="createSSForm">
+            <input type="text" id="subspeakName" name="name" placeholder="name">
+            <input type="text" id="subspeakDesc" name="description" placeholder="description">
+            <button type="submit">Submit</button>
+          </form>
+
+          </form>
+        </div>
+
+      </div>
+
+    </div>
+  </div>

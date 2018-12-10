@@ -19,8 +19,9 @@ module.exports = function (app) {
   });
 
 
-
-
+  app.get("/createPost", function(req, res){
+    res.render("createPost", {})
+  })
 
   //register get route
   app.get("/register", function (req, res) {
