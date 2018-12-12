@@ -89,6 +89,44 @@ module.exports = function (app) {
 
   })
 
+  // get route for post... MySQL equiv... join... SELECT WHERE... 
+  app.get("/api/post", function(req, res) {
+    let userId = checkForMultipleUsers(req);
+    if (req.isAuthenticated()) {
+    db.Users.findOne({
+      where: {
+        id: userId
+      },
+      include: [{
+        model: db.SubbedSubspeaks,
+        where: {
+          UserId: userId
+        },
+        required: false
+      }]
+    }).then(userInfo => {
+      console.log("POST Call: " + JSON.stringify(userInfo));
+      var ourData = JSON.stringify(userInfo.SubbedSubspeaks[0].id);
+      var postObject = [];
+      console.log("TESTING FOR OBJECT:L " + ourData)
+      userInfo.SubbedSubspeaks.forEach(element => {
+        db.Post.findAll({
+          where: {
+            SubspeakId: JSON.stringify(element.id) 
+          }
+        }).then(result => {
+
+          postObject.push(result)
+          console.log("to post object:" + + JSON.stringify(postObject))
+        })
+        
+      });
+     
+     // res.json()
+    })
+  }
+ 
+  })
 
   //login user
   app.post("/api/login", passport.authenticate('local', {
@@ -112,7 +150,7 @@ module.exports = function (app) {
 
     //if there are errors display them on screen 
     if (errors) {
-      console.log(`errors: ${JSON.stringify(errors)}`)
+      //console.log(`errors: ${JSON.stringify(errors)}`)
 
       res.render('register', {
         title: "Register",
@@ -161,7 +199,7 @@ module.exports = function (app) {
       }
     }).then((result) => {
       let userId = checkForMultipleUsers(req);
-      console.log("Results: " + result.id, "Title: " + req.body.title)
+      //console.log("Results: " + result.id, "Title: " + req.body.title)
       db.Post.create({
           post_text: req.body.text,
           title: req.body.title,

@@ -62,6 +62,12 @@ var API = {
       type: "DELETE"
     });
   },
+  getPost: function () {
+    return $.ajax({
+      url: "/api/post",
+      type: "GET"
+    });
+  },
   deleteExample: function (id) {
     return $.ajax({
       url: "api/examples/" + id,
@@ -101,6 +107,10 @@ $(document).ready(function () {
         $('.username').append(logout);
         $('#navList').append(ul)
         refreshSubscriptions();
+      
+        API.getPost().then(post => {
+          
+        }) 
       }
     })
 
