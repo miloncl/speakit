@@ -33,7 +33,7 @@ var API = {
     return $.ajax({
       headers: {
         "Content-Type": "application/json"
-      }, 
+      },
       type: "POST",
       url: "/api/createPost",
       data: JSON.stringify(data)
@@ -107,10 +107,49 @@ $(document).ready(function () {
         $('.username').append(logout);
         $('#navList').append(ul)
         refreshSubscriptions();
-      
-        API.getPost().then(post => {
-          
-        }) 
+
+        //if on my feed page
+        if (window.location.pathname === "/") {
+          API.getPost().then(post => {
+
+            post.forEach(element => {
+              console.log(element)
+              let newPost = $(
+
+                `<div class="col-xl-12">
+                <div class="post_container">
+
+                    <div class="post_title_container d-flex">
+                      <h3 class="title">${element.title}</h3>
+                      <a href="/s/${element.subspeak}"class="subspeak_name ml-auto">${element.subspeak}</a>
+                    </div>
+                    
+                    <div class="post_description"> 
+                    ${element.post_text}
+                    </div>
+                    <div class="d-flex post_footer">
+                      <ul>
+                        <li>Comments</li>
+                        <li>Read Later</li>
+                        <li>User</li>
+                        <li>Voting</li>
+                      </ul>
+
+                    <span class="badges ml-auto">
+                      <ul>
+                        <li>Useful</li>
+                        <li>Educational</li>
+                        <li>Inforamtive</li>
+                      </ul>
+                    </span>
+                  </div>
+                </div>`)
+
+                $("#post_row").append(newPost);
+            });
+
+          })
+        }
       }
     })
 
@@ -139,7 +178,7 @@ $(document).ready(function () {
     console.log("refresh posts");
   }
 
-  $("#createPostForm").submit(function (event){
+  $("#createPostForm").submit(function (event) {
     event.preventDefault();
 
     var data = {
@@ -148,7 +187,7 @@ $(document).ready(function () {
       text: cpSSTextArea.val()
     }
 
-    API.createPost(data).then(function() {
+    API.createPost(data).then(function () {
       refreshPosts();
     })
 
@@ -187,7 +226,7 @@ $(document).ready(function () {
       subspeakId: $("#ssSubscribe").attr("data-id")
     }
     API.subscribe(data).then(function () {
-    
+
     })
   })
 
@@ -196,9 +235,9 @@ $(document).ready(function () {
     console.log("Run")
     var subspeakName = $("#ssUnSubscribe").attr("data-subspeak");
     var id = $("#ssUnSubscribe").attr("data-id");
-   
+
     API.unSubscribe(id, subspeakName).then(function () {
-      
+
     })
   })
 

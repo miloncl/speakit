@@ -51,6 +51,11 @@ ul li {
   margin-right: 313px;
 }
 
+.title_container {
+  max-height: 87px;
+  height: 100%;
+}
+
 .navbar {
   z-index: 9999;
   margin: 0;

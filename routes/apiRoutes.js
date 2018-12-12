@@ -6,47 +6,6 @@ var passport = require('passport');
 
 module.exports = function (app) {
 
-  //index page
-  // Load index page
-  // app.get("/", function (req, res) {
-
-  //   let userId = checkForMultipleUsers(req);
-
-  //   console.log("anything")
-  //   if (req.isAuthenticated()) {
-  //     console.log(userId)
-  //     db.Users.findOne({
-  //       where: {
-  //         id: userId
-  //       },
-  //       include: [{
-  //         model: db.SubbedSubspeaks,
-  //         where: {
-  //           UserId: userId
-  //         },
-  //         required: false
-  //       }]
-  //     }).then((userInfo) => {
-
-
-  //       console.log("USERINFO: " + JSON.stringify(userInfo));
-
-  //       res.render("index", {
-  //         user: req.isAuthenticated(),
-  //         username: userInfo.user_name,
-  //         subspeaks: userInfo.SubbedSubspeaks
-  //       });
-
-  //     });
-  //   } else {
-
-  //     //testing to see if we're logged in 
-  //     res.render("index", {
-  //       user: req.isAuthenticated(),
-  //     });
-  //   }
-  // });
-
   app.get("/api/checkLogin", (req, res) => {
     let userId = checkForMultipleUsers(req);
     let userObj = {}
@@ -90,42 +49,50 @@ module.exports = function (app) {
   })
 
   // get route for post... MySQL equiv... join... SELECT WHERE... 
-  app.get("/api/post", function(req, res) {
+  app.get("/api/post", function (req, res) {
     let userId = checkForMultipleUsers(req);
     if (req.isAuthenticated()) {
-    db.Users.findOne({
-      where: {
-        id: userId
-      },
-      include: [{
-        model: db.SubbedSubspeaks,
+      db.Users.findOne({
         where: {
-          UserId: userId
+          id: userId
         },
-        required: false
-      }]
-    }).then(userInfo => {
-      console.log("POST Call: " + JSON.stringify(userInfo));
-      var ourData = JSON.stringify(userInfo.SubbedSubspeaks[0].id);
-      var postObject = [];
-      console.log("TESTING FOR OBJECT:L " + ourData)
-      userInfo.SubbedSubspeaks.forEach(element => {
-        db.Post.findAll({
+        include: [{
+          model: db.SubbedSubspeaks,
           where: {
-            SubspeakId: JSON.stringify(element.id) 
-          }
-        }).then(result => {
+            UserId: userId
+          },
+          required: false
+        }]
+      }).then(userInfo => {
+        var doneCounter = 0;
+        let postObject = [];
 
-          postObject.push(result)
-          console.log("to post object:" + + JSON.stringify(postObject))
-        })
-        
-      });
-     
-     // res.json()
-    })
-  }
- 
+        userInfo.SubbedSubspeaks.forEach(element => {
+          db.Post.findAll({
+            where: {
+              SubspeakId: JSON.stringify(element.SubspeakId)
+            }
+          }).then(result => {
+            doneCounter++;
+            console.log(result[0].title)
+            let post = {
+              title: result[0].title,
+              post_text: result[0].post_text,
+              subspeak: element.subspeak_name
+            }
+            postObject.push(post)
+            if (doneCounter === userInfo.SubbedSubspeaks.length) {
+              console.log("to post object:" + JSON.stringify(postObject))
+              res.json(postObject)
+            }
+          })
+
+        });
+
+        // res.json()
+      })
+    }
+
   })
 
   //login user
@@ -191,7 +158,7 @@ module.exports = function (app) {
   });
 
   app.post("/api/createPost", function (req, res) {
-    
+
 
     db.Subspeaks.findOne({
       where: {
@@ -201,12 +168,12 @@ module.exports = function (app) {
       let userId = checkForMultipleUsers(req);
       //console.log("Results: " + result.id, "Title: " + req.body.title)
       db.Post.create({
-          post_text: req.body.text,
-          title: req.body.title,
-          SubspeakId: result.id,
-          UserId: userId
+        post_text: req.body.text,
+        title: req.body.title,
+        SubspeakId: result.id,
+        UserId: userId
       }).then(task => {
-        
+
       })
     })
 
