@@ -90,7 +90,7 @@ $(document).ready(function () {
       } else {
         let username = $(`<p>${user.username}</p>`)
         let logout = $(`<a href="/logout">Logout</a>`);
-        let ul = $(` <ul>
+        let ul = $(` <ul id ="right_icon">
         <li><a href="/"><i class="far fa-newspaper" id="myFeed"></i></a></li>
         <li><a href="/"><i class="fas fa-cog" id="settings"></i></li>
         <li><a href="/createPost"><i class="far fa-edit" id="createPost"></i></a></li>
@@ -193,3 +193,15 @@ $(document).ready(function () {
   })
 
 })
+
+
+function openNav() {
+  document.getElementById("mySidebar").style.width = "250px";
+  document.getElementById("main").style.marginRight = "250px";
+}
+
+/* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
+function closeNav() {
+  document.getElementById("mySidebar").style.width = "0";
+  document.getElementById("main").style.marginRight = "0";
+}
