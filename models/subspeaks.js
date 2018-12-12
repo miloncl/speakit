@@ -14,14 +14,11 @@ module.exports = function (sequelize, DataTypes) {
     Subspeaks.hasMany(models.SubbedSubspeaks, {
       onDelete: "cascade"
     });
-  };
 
-  Subspeaks.associate = function(models) {
-    // Associating Author with Posts
-    // When an Author is deleted, also delete any associated Posts
     Subspeaks.hasMany(models.Post, {
       onDelete: "cascade"
     });
   };
+
   return Subspeaks;
 };

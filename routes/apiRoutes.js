@@ -153,24 +153,22 @@ module.exports = function (app) {
   });
 
   app.post("/api/createPost", function (req, res) {
-    let userId = checkForMultipleUsers(req);
+    
 
     db.Subspeaks.findOne({
       where: {
         name: req.body.subspeakName
       }
     }).then((result) => {
+      let userId = checkForMultipleUsers(req);
       console.log("Results: " + result.id, "Title: " + req.body.title)
       db.Post.create({
-  
-        defaults: {
           post_text: req.body.text,
           title: req.body.title,
           SubspeakId: result.id,
           UserId: userId
-        }
-      }).spread((results, created) => {
-        console.log(created)
+      }).then(task => {
+        
       })
     })
 
