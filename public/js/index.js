@@ -96,6 +96,26 @@ var API = {
       type: "GET"
     });
   },
+  upvotePost: function (id, data) {
+    return $.ajax({
+      headers: {
+        "Content-Type": "application/json"
+      },
+      url: "/api/upvotePost/" + id,
+      type: "POST",
+      data: JSON.stringify(data)
+    });
+  },
+  downvotePost: function (id, data) {
+    return $.ajax({
+      headers: {
+        "Content-Type": "application/json"
+      },
+      url: "/api/downvotePost/" + id,
+      type: "POST",
+      data: JSON.stringify(data)
+    });
+  }, 
   deleteExample: function (id) {
     return $.ajax({
       url: "api/examples/" + id,
@@ -110,7 +130,7 @@ $(document).ready(function () {
   function checkForUser() {
 
     API.checkUser().then((user) => {
-      console.log(user);
+
       if (user.logged === false) {
 
         let loginBtn = $('<button type="button" class="btn btn-info btn-lg mainBtn" data-toggle="modal" data-target="#myModal"><i class="fas fa-sign-in-alt loginIcon"></i>Login</button>')
@@ -119,7 +139,7 @@ $(document).ready(function () {
         <li><a href="/"><i class="far fa-newspaper" id="myFeed"></i></a></li>
         <li><a href="/"><i class="fas fa-cog" id="settings"></i></li>
         
-      </ul>`)
+        </ul>`)
         $('.username').append(loginBtn)
         $('#navList').append(ul)
 
@@ -130,9 +150,7 @@ $(document).ready(function () {
           //create post
 
           post.forEach(element => {
-            console.log(element)
             let newPost = $(
-
               `<div class="col-xl-12">
               <div class="post_container">
 
@@ -164,12 +182,10 @@ $(document).ready(function () {
 
             $("#post_row").prepend(newPost);
           });
-
         })
       } else {
-        let username = $(`<p>${user.username}</p>`)
-        let logout = $(`<a href="/logout">Logout</a>`);
 
+        //the right bar content when logged in 
         let dropdown = $(`
 
         <div class="btn-group">
@@ -217,7 +233,7 @@ $(document).ready(function () {
                         <li><i class="far fa-comments"></i></li>
                         <li><i class="far fa-bookmark"></i></li>
                         <li><i class="fas fa-user-edit"></i></li>
-                        <li><i class="fas fa-arrow-up"></i><i class="fas fa-arrow-down"></i></li>
+                      <li><button data-postId="${element.id}" class="upvote"><i class="fas fa-arrow-up"></i></button>${element.votes}<button data-postId="${element.id}" class="downvote"><i class="fas fa-arrow-down"></i></button></li>
                       </ul>
 
                     <span class="badges ml-auto">
@@ -239,7 +255,6 @@ $(document).ready(function () {
         //load the subspeak posts
         if (window.location.pathname.includes("/s/") && !window.location.pathname.includes("/p/")) {
 
-          console.log(window.location.pathname);
           let subspeakName = window.location.pathname.split("/");
           subspeakName = subspeakName[2]
           console.log(subspeakName)
@@ -263,7 +278,7 @@ $(document).ready(function () {
                         <li><i class="far fa-comments"></i></li>
                         <li><i class="far fa-bookmark"></i></li>
                         <li><i class="fas fa-user-edit"></i></li>
-                        <li><i class="fas fa-arrow-up"></i><i class="fas fa-arrow-down"></i></li>
+                        <li><button data-postId="${element.id}" class="upvote"><i class="fas fa-arrow-up"></i></button>${element.votes}<button data-postId="${element.id}" class="downvote"><i class="fas fa-arrow-down"></i></button></li>
                       </ul>
 
                     <span class="badges ml-auto">
@@ -276,7 +291,7 @@ $(document).ready(function () {
                   </div>
                 </div>`)
 
-              $("#post_row").append(newPost);
+              $("#post_row").prepend(newPost);
             });
           })
 
@@ -332,6 +347,13 @@ $(document).ready(function () {
         mainDiv.append(description);
         $(".subspeak_main_div").append(mainDiv)
 
+        //if on the create post page load the posts into the dropdown
+        if (window.location.pathname === ("/createPost")) {
+          usersSubs.forEach(element => {
+            let option = $(`<option value=${element.subspeak_name}>${element.subspeak_name}</option>`);
+            $("#cpSSName").append(option);
+          })
+        }
       });
     })
   }
@@ -349,10 +371,13 @@ $(document).ready(function () {
       text: cpSSTextArea.val()
     }
 
-    API.createPost(data).then(function () {
-      refreshPosts();
-    })
+    API.createPost(data).then(function (done) {
 
+    })
+    refreshPosts();
+    console.log("POSTED")
+    $('#cpSSTitle').val("");
+    $('#cpSSTextArea').val("");
   })
 
   //form submit for when a user creates a new subspeak
@@ -370,9 +395,8 @@ $(document).ready(function () {
       createdBy: ""
     }
 
-    API.createSubspeak(data).then(function () {
-      refreshSubscriptions();
-    });
+    API.createSubspeak(data).then(function () {});
+    refreshSubscriptions();
 
     subspeakName.val("");
     subspeakDesc.val("");
@@ -399,10 +423,26 @@ $(document).ready(function () {
     var id = $("#ssUnSubscribe").attr("data-id");
 
     API.unSubscribe(id, subspeakName).then(function () {
-
+      location.reload();
     })
   })
 
+  //when a user clicks upvote
+  $(document).on("click", ".upvote", function() {
+    let postId = $(this).attr("data-postId")
+    let data = {};
+    API.upvotePost(postId, data).then(done =>{
+
+    })
+  })
+  //when a user clicks downvote
+  $(document).on("click", ".downvote", function() {
+    let postId = $(this).attr("data-postId")
+    let data = {};
+    API.downvotePost(postId, data).then(done =>{
+
+    })
+  })
   //post a comment
   $(document).on("click", "#postAComment", function () {
     var postId = $("#postAComment").attr("data-id");
@@ -414,7 +454,7 @@ $(document).ready(function () {
     }
     API.postComment(data).then(comment => {
       if (comment) {
-        window.location.reload();
+        location.reload();
       }
     })
   })

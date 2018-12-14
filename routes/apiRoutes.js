@@ -51,6 +51,7 @@ module.exports = function (app) {
   // get route for post... MySQL equiv... join... SELECT WHERE... 
   app.get("/api/post", function (req, res) {
     let userId = checkForMultipleUsers(req);
+    let postArray = [];
     if (req.isAuthenticated()) {
       db.Users.findOne({
         where: {
@@ -64,39 +65,52 @@ module.exports = function (app) {
           required: false
         }]
       }).then(userInfo => {
-        var doneCounter = 0;
-        let postObject = [];
-
-        userInfo.SubbedSubspeaks.forEach(element => {
+        for (let j = 0; j < userInfo.SubbedSubspeaks.length; j++) {
           db.Post.findAll({
             where: {
-              SubspeakId: JSON.stringify(element.SubspeakId)
+              SubspeakId: JSON.stringify(userInfo.SubbedSubspeaks[j].SubspeakId)
             }
           }).then(result => {
-            doneCounter++;
-            console.log(result[0].title)
-            let post = {
-              title: result[0].title,
-              post_text: result[0].post_text,
-              subspeak: element.subspeak_name
-            }
-            postObject.push(post)
-            if (doneCounter === userInfo.SubbedSubspeaks.length) {
-              console.log("to post object:" + JSON.stringify(postObject))
-              res.json(postObject)
+            //for each post get the votes and respond to request
+            for (let i = 0; i < result.length; i++) {
+              db.Votes.findAll({
+                where: {
+                  PostId: result[i].id
+                }
+              }).then(votes => {
+                let countedVotes = 0;
+                votes.forEach(eachVote => {
+                  if(eachVote.votes === "upvote"){
+                    countedVotes++;
+                  } else {
+                    countedVotes--;
+                  }
+
+                })
+                console.log(votes)
+                let post = {
+                  id: result[i].id,
+                  title: result[i].title,
+                  post_text: result[i].post_text,
+                  subspeak: userInfo.SubbedSubspeaks[j].subspeak_name,
+                  votes: countedVotes
+                }
+                postArray.push(post)
+
+                if (j === userInfo.SubbedSubspeaks.length - 1 && i === result.length - 1) {
+                  res.json(postArray)
+                }
+
+              })
             }
           })
-
-        });
-
-        // res.json()
+        }
       })
     }
-
   })
 
   app.get("/api/subspeakPosts/:name", function (req, res) {
-    console.log("api/subspeakPosts" + req.params.name)
+    let postArray = []
     db.Subspeaks.findOne({
       where: {
         name: req.params.name
@@ -109,9 +123,40 @@ module.exports = function (app) {
           SubspeakId: result.id
         }
       }).then(posts => {
-        console.log("HERE ARE THE SUBSPEAK POSTS: " + JSON.stringify(posts));
 
-        res.json(posts)
+        //for each post get the votes and respond to request
+        for (let i = 0; i < posts.length; i++) {
+          db.Votes.findAll({
+            where: {
+              PostId: posts[i].id
+            }
+          }).then(votes => {
+            let countedVotes = 0;
+            votes.forEach(eachVote => {
+              if(eachVote.votes === "upvote"){
+                console.log("anything")
+                countedVotes++;
+              } else {
+                countedVotes--;
+              }
+
+            })
+            let post = {
+              id: posts[i].id,
+              title: posts[i].title,
+              post_text: posts[i].post_text,
+              subspeak: req.params.name,
+              votes: countedVotes
+            }
+            postArray.push(post)
+
+            if (i === posts.length - 1) {
+              res.json(postArray)
+            }
+          })
+        }
+
+
       })
     })
   })
@@ -295,10 +340,28 @@ module.exports = function (app) {
   })
   //get all post
   app.get("/api/getAll", function (req, res) {
+    let posts = []
     db.Post.findAll({}).then(post => {
-      console.log(post);
-      res.json(post)
-    })
+      for (let i = 0; i < post.length; i++) {
+
+        db.Votes.findAll({
+          where: {
+            PostId: post[i].id
+          }
+        }).then(result => {
+          let fullPost = {
+            title: post[i].title,
+            subspeak: post[i].subspeak,
+            post_text: post[i].post_text,
+            votes: result.length
+          }
+          posts.push(fullPost);
+          if (i === post.length - 1) {
+            res.json(posts)
+          }
+        })
+      }
+    });
   })
   //post a reply to the post
   app.post("/api/postComment", function (req, res) {
@@ -410,19 +473,107 @@ module.exports = function (app) {
     })
   })
 
-  // Delete an example by id
-  app.delete("/api/examples/:id", function (req, res) {
-    db.Example.destroy({
+  app.post("/api/upvotePost/:id", function (req, res) {
+    let userId = checkForMultipleUsers(req);
+    db.Post.findOne({
       where: {
         id: req.params.id
-      }
-    }).then(function (
-      dbExample
-    ) {
-      res.json(dbExample);
-    });
-  });
+      },
+      include: [{
+        model: db.Votes,
+        where: {
+          UserId: userId
+        },
+        required: false
+      }]
+    }).then(result => {
 
+      if (result.Votes.length !== 0) {
+        if (result.Votes.votes === "downvote") {
+
+          db.Votes.create({
+            votes: "upvote",
+            PostId: req.params.id,
+            UserId: userId,
+          }).then(() => {
+            db.Votes.destroy({
+              where: {
+                id: result.Votes[0].id
+              }
+            })
+          })
+
+        } else {
+
+          //this means that the user already has voted
+          //delete the already existing upvote that the user did
+          db.Votes.destroy({
+            where: {
+              id: result.Votes[0].id
+            }
+          })
+        }
+
+      } else {
+        db.Votes.create({
+          votes: "upvote",
+          PostId: req.params.id,
+          UserId: userId,
+        })
+      }
+    })
+  })
+
+  app.post("/api/downvotePost/:id", function (req, res) {
+    let userId = checkForMultipleUsers(req);
+    db.Post.findOne({
+      where: {
+        id: req.params.id
+      },
+      include: [{
+        model: db.Votes,
+        where: {
+          UserId: userId
+        },
+        required: false
+      }]
+    }).then(result => {
+
+      if (result.Votes.length !== 0) {
+        if (result.Votes.votes === "upvote") {
+
+          db.Votes.create({
+            votes: "downvote",
+            PostId: req.params.id,
+            UserId: userId,
+          }).then(() => {
+            db.Votes.destroy({
+              where: {
+                id: result.Votes[0].id
+              }
+            })
+          })
+
+        } else {
+
+          //this means that the user already has voted
+          //delete the already existing upvote that the user did
+          db.Votes.destroy({
+            where: {
+              id: result.Votes[0].id
+            }
+          })
+        }
+
+      } else {
+        db.Votes.create({
+          votes: "downvote",
+          PostId: req.params.id,
+          UserId: userId,
+        })
+      }
+    })
+  })
 
 
 };

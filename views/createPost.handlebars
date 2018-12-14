@@ -1,7 +1,9 @@
 <div class="wrapper">
   <div class="container">
     <form action="POST" id="createPostForm">
-      <input type="text" id="cpSSName" name="subspeakName" placeholder="Enter the Subspeak's name.">
+      <select class="form-control" id="cpSSName" name="subspeakName">
+        <option value="" disabled selected value>Select an Option</option>
+      </select>
       <input type="text" id="cpSSTitle" name="title" placeholder="Enter the Post's Title">
       <input type="textarea" id="cpSSTextArea" name="text" placeholder="Enter Text">
       <input type="submit" name="login" class="login loginmodal-submit" value="Submit">
