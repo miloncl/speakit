@@ -118,6 +118,19 @@ $(document).ready(function () {
       } else {
         let username = $(`<p>${user.username}</p>`)
         let logout = $(`<a href="/logout">Logout</a>`);
+
+        let dropdown = $(`
+
+        <div class="btn-group">
+          <button type="button" class="btn dropdown dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <p>${user.username}<i class="fa down-arrow fa-angle-down"></i></p>
+          </button>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="/logout">Logout</a>
+          </div>
+        </div>
+        `)
+
         let ul = $(` <ul>
         <li><a href="/"><i class="far fa-newspaper" id="myFeed"></i></a></li>
         <li><a href="/"><i class="fas fa-cog" id="settings"></i></li>
@@ -125,8 +138,7 @@ $(document).ready(function () {
         <li><button type="button" data-toggle="modal" data-target="#ssModal" id="createSSBtn"><i class="fas fa-pen-nib"
               id="createSS"></i></button></li>
       </ul>`)
-        $('.username').append(username);
-        $('.username').append(logout);
+        $('.username').append(dropdown);
         $('#navList').append(ul)
         refreshSubscriptions();
 
