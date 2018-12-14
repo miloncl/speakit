@@ -1,7 +1,7 @@
 module.exports = function (sequelize, DataTypes) {
   var Posts = sequelize.define("Post", {
     post_text: DataTypes.TEXT,
-    views: DataTypes.INTEGER,
+    votes: DataTypes.INTEGER,
     title: DataTypes.TEXT
   });
   Posts.associate = function(models) {

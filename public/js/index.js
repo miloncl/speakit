@@ -13,6 +13,12 @@ var API = {
       type: "GET"
     })
   },
+  getAll: function () {
+    return $.ajax({
+      url: "/api/getAll",
+      type: "GET"
+    })
+  },
   loginUser: function () {
     return $.ajax({
       url: "/api/login",
@@ -106,6 +112,7 @@ $(document).ready(function () {
     API.checkUser().then((user) => {
       console.log(user);
       if (user.logged === false) {
+      
         let loginBtn = $('<button type="button" class="btn btn-info btn-lg mainBtn" data-toggle="modal" data-target="#myModal"><i class="fas fa-sign-in-alt loginIcon"></i>Login</button>')
 
         let ul = $(` <ul>
@@ -115,6 +122,50 @@ $(document).ready(function () {
       </ul>`)
         $('.username').append(loginBtn)
         $('#navList').append(ul)
+
+        API.getAll().then(post => {
+
+          console.log(post);
+
+          //create post
+
+          post.forEach(element => {
+            console.log(element)
+            let newPost = $(
+
+              `<div class="col-xl-12">
+              <div class="post_container">
+
+                  <div class="post_title_container d-flex">
+                    <h3 class="title"><a href="/s/p/${element.title}">${element.title}</a></h3>
+                    <a href="/s/${element.subspeak}"class="subspeak_name ml-auto">${element.subspeak}</a>
+                  </div>
+                  
+                  <div class="post_description"> 
+                  ${element.post_text}
+                  </div>
+                  <div class="d-flex post_footer">
+                    <ul>
+                      <li><i class="far fa-comments"></i></li>
+                      <li><i class="far fa-bookmark"></i></li>
+                      <li><i class="fas fa-user-edit"></i></li>
+                      <li><i class="fas fa-arrow-up"></i><i class="fas fa-arrow-down"></i></li>
+                    </ul>
+
+                  <span class="badges ml-auto">
+                  <ul>
+                  <li><i class="far fa-smile"></i></li>
+                  <li><i class="fas fa-info"></i></li>
+                  <li><i class="fas fa-pencil-alt"></i></li>
+                </ul>
+                  </span>
+                </div>
+              </div>`)
+
+            $("#post_row").prepend(newPost);
+          });
+
+        })
       } else {
         let username = $(`<p>${user.username}</p>`)
         let logout = $(`<a href="/logout">Logout</a>`);

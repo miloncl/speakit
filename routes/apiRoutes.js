@@ -272,6 +272,14 @@ module.exports = function (app) {
       res.json(comments)
     })
   })
+  //get all post
+  app.get("/api/getAll", function (req, res){
+    db.Post.findAll({
+    }).then(post => {
+      console.log(post);
+      res.json(post)
+    })
+  })
   //post a reply to the post
   app.post("/api/postComment", function (req, res){
     let userId = checkForMultipleUsers(req);
