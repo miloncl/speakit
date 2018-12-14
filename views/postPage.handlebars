@@ -1,0 +1,70 @@
+<div class="wrapper">
+
+  {{> navbar}}
+
+  {{#if postName}}
+
+
+  <div class="row" id="title_row">
+    {{!-- title bar --}}
+    <div class="col-xl-6 d-flex justify-content-start left_col_title ">
+      <div class="title">
+        <h3 id="postName" data-id="{{postId}}">{{postName}}</h3>
+
+      </div>
+    </div>
+
+    <div class="col-xl-6 d-flex justify-content-end right_col_title">
+      <ul>
+        <li>Useful</li>
+        <li>Informative</li>
+        <li>Educational</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="postTextDiv col-xl-12 d-flex">
+    <p class="postText">{{postText}}</p>
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+      Reply
+    </button>
+
+  </div>
+  {{else}}
+  Post Not Found! Create it!
+  {{/if}}
+
+  <div class="container-fluid">
+
+    <div class="row" id="comments_row">
+
+    </div>
+  </div>
+
+</div>
+
+{{> leftBar}}
+
+{{> rightBar}}
+{{> createSSModal}}
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Post a Comment</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <textarea name="" id="commentTextArea" cols="30" rows="10"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button data-id="{{postId}}" type="button" class="btn btn-primary" id="postAComment">Post A Comment</button>
+      </div>
+    </div>
+  </div>
+</div>

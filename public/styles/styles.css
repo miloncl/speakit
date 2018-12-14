@@ -77,6 +77,16 @@ ul li {
   max-width: 100%;
 }
 
+.postTextDiv {
+  border-bottom: 1px solid #00000022;
+  max-height: 240px;
+  height: 100%;
+}
+
+.postText {
+  margin: auto;
+}
+
 .logoSpeak {
   font-family: 'Montserrat', sans-serif;
   font-size: 28px;
@@ -183,6 +193,28 @@ ul li {
 .post_footer {
 
   border-top: 1px solid #00000022;
+}
+
+.commentContainer {
+  background-color: #ffffff;
+  max-width: 1200px;
+  width: 100%;
+  margin: auto;
+  border: 1px solid #00000022;
+  margin-top: 40px;
+}
+
+.commentBody {
+  border-bottom: 1px solid #00000022;
+  margin-top: 30px;
+  padding-left: 30px;
+  padding-bottom: 30px;
+}
+
+.commentFooter {
+  align-items: flex-start;
+  padding: 10px;
+  padding-bottom: 10px;
 }
 
 .right_menu {

@@ -68,6 +68,28 @@ var API = {
       type: "GET"
     });
   },
+  getSubspeaksPosts: function (name) {
+    return $.ajax({
+      url: "/api/subspeakPosts/" + name,
+      type: "GET"
+    });
+  },
+  postComment: function (data) {
+    return $.ajax({
+      headers: {
+        "Content-Type": "application/json"
+      },
+      type: "POST",
+      url: "/api/postComment",
+      data: JSON.stringify(data)
+    });
+  },
+  getComments: function (id) {
+    return $.ajax({
+      url: "/api/getComments/" + id,
+      type: "GET"
+    });
+  },
   deleteExample: function (id) {
     return $.ajax({
       url: "api/examples/" + id,
@@ -120,7 +142,7 @@ $(document).ready(function () {
                 <div class="post_container">
 
                     <div class="post_title_container d-flex">
-                      <h3 class="title">${element.title}</h3>
+                      <h3 class="title"><a href="/s/p/${element.title}">${element.title}</a></h3>
                       <a href="/s/${element.subspeak}"class="subspeak_name ml-auto">${element.subspeak}</a>
                     </div>
                     
@@ -129,27 +151,104 @@ $(document).ready(function () {
                     </div>
                     <div class="d-flex post_footer">
                       <ul>
-                        <li>Comments</li>
-                        <li>Read Later</li>
-                        <li>User</li>
-                        <li>Voting</li>
+                        <li><i class="far fa-comments"></i></li>
+                        <li><i class="far fa-bookmark"></i></li>
+                        <li><i class="fas fa-user-edit"></i></li>
+                        <li><i class="fas fa-arrow-up"></i><i class="fas fa-arrow-down"></i></li>
                       </ul>
 
                     <span class="badges ml-auto">
-                      <ul>
-                        <li>Useful</li>
-                        <li>Educational</li>
-                        <li>Inforamtive</li>
-                      </ul>
+                    <ul>
+                    <li><i class="far fa-smile"></i></li>
+                    <li><i class="fas fa-info"></i></li>
+                    <li><i class="fas fa-pencil-alt"></i></li>
+                  </ul>
                     </span>
                   </div>
                 </div>`)
 
-                $("#post_row").append(newPost);
+              $("#post_row").prepend(newPost);
             });
 
           })
         }
+
+        //load the subspeak posts
+        if (window.location.pathname.includes("/s/") && !window.location.pathname.includes("/p/")) {
+
+          console.log(window.location.pathname);
+          let subspeakName = window.location.pathname.split("/");
+          subspeakName = subspeakName[2]
+          console.log(subspeakName)
+          API.getSubspeaksPosts(subspeakName).then(posts => {
+            posts.forEach(element => {
+              let newPost = $(
+
+                `<div class="col-xl-12">
+                <div class="post_container">
+
+                    <div class="post_title_container d-flex">
+                      <h3 class="title">${element.title}</h3>
+                      <a href="/s/${subspeakName}"class="subspeak_name ml-auto">${subspeakName}</a>
+                    </div>
+                    
+                    <div class="post_description"> 
+                    ${element.post_text}
+                    </div>
+                    <div class="d-flex post_footer">
+                      <ul>
+                        <li><i class="far fa-comments"></i></li>
+                        <li><i class="far fa-bookmark"></i></li>
+                        <li><i class="fas fa-user-edit"></i></li>
+                        <li><i class="fas fa-arrow-up"></i><i class="fas fa-arrow-down"></i></li>
+                      </ul>
+
+                    <span class="badges ml-auto">
+                    <ul>
+                    <li><i class="far fa-smile"></i></li>
+                    <li><i class="fas fa-info"></i></li>
+                    <li><i class="fas fa-pencil-alt"></i></li>
+                  </ul>
+                    </span>
+                  </div>
+                </div>`)
+
+              $("#post_row").append(newPost);
+            });
+          })
+
+
+        }
+        //load the posts page
+        if (window.location.pathname.includes("/p/")) {
+          let postId = $("#postName").attr('data-id');
+          API.getComments(postId).then(result => {
+            console.log(result)
+
+            result.forEach(element => {
+              let newComment = $(
+                `<div class="col-xl-12">
+                <div class="row" id="comments_row">
+                <div class="commentContainer">
+                  <div class="commentBody d-flex">
+                    ${element.comments}
+                  </div>
+                  <div class="commentFooter d-flex">
+                    <ul>
+                      <li>User</li>
+                      <li>Voting</li>
+                    </ul>
+                  </div>
+                </div>
+              </div> 
+                </div>`
+              )
+              $("#comments_row").append(newComment);
+            });
+          })
+
+        }
+
       }
     })
 
@@ -162,7 +261,7 @@ $(document).ready(function () {
       $(".subspeak_main_div").empty();
       usersSubs.forEach(element => {
 
-        let heading = $(`<h3 class="subspeak_name"><a href="/s/${element.subspeak_name}">${element.subspeak_name}</a></h3>`)
+        let heading = $(`<h3 class="subspeak_name"><a class="sideMenuSubspeakButtons" data-id="${element.SubspeakId}" href="/s/${element.subspeak_name}">${element.subspeak_name}</a></h3>`)
         let description = $(`<p class="subspeak_description">${element.subspeak_description}</p>`)
         let mainDiv = $(`<div class="sidebar_subspeaks d-flex flex-column align-items-start justify-content-center"></div>`)
 
@@ -238,6 +337,22 @@ $(document).ready(function () {
 
     API.unSubscribe(id, subspeakName).then(function () {
 
+    })
+  })
+
+  //post a comment
+  $(document).on("click", "#postAComment", function () {
+    var postId = $("#postAComment").attr("data-id");
+    var commentText = $('#commentTextArea').val();
+    console.log(postId)
+    var data = {
+      id: postId,
+      comment: commentText
+    }
+    API.postComment(data).then(comment => {
+      if (comment) {
+        window.location.reload();
+      }
     })
   })
 
