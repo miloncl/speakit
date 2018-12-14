@@ -112,7 +112,7 @@ $(document).ready(function () {
     API.checkUser().then((user) => {
       console.log(user);
       if (user.logged === false) {
-      
+
         let loginBtn = $('<button type="button" class="btn btn-info btn-lg mainBtn" data-toggle="modal" data-target="#myModal"><i class="fas fa-sign-in-alt loginIcon"></i>Login</button>')
 
         let ul = $(` <ul>
@@ -149,7 +149,7 @@ $(document).ready(function () {
                       <li><i class="far fa-comments"></i></li>
                       <li><i class="far fa-bookmark"></i></li>
                       <li><i class="fas fa-user-edit"></i></li>
-                      <li><i class="fas fa-arrow-up"></i><i class="fas fa-arrow-down"></i></li>
+                      <li><button class="upvote"><i class="fas fa-arrow-up"></i></button>${element.votes}<button class="downvote"><i class="fas fa-arrow-down"></i></button></li>
                     </ul>
 
                   <span class="badges ml-auto">

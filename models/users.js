@@ -1,11 +1,11 @@
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   var users = sequelize.define("Users", {
     user_email: DataTypes.TEXT,
     password: DataTypes.TEXT,
     user_name: DataTypes.TEXT,
   });
 
-  users.associate = function(models) {
+  users.associate = function (models) {
     // Associating Author with Posts
     // When an Author is deleted, also delete any associated Posts
     users.hasMany(models.SubbedSubspeaks, {
@@ -19,7 +19,11 @@ module.exports = function(sequelize, DataTypes) {
     users.hasMany(models.Comments, {
       onDelete: "cascade"
     });
+
+    users.hasMany(models.Votes, {
+      onDelete: "cascade"
+    });
   };
 
-  return users; 
+  return users;
 };

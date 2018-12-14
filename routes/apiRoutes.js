@@ -101,7 +101,7 @@ module.exports = function (app) {
       where: {
         name: req.params.name
       },
-     
+
     }).then(result => {
       console.log("RESULTS AHHH: " + JSON.stringify(result))
       db.Post.findAll({
@@ -110,7 +110,7 @@ module.exports = function (app) {
         }
       }).then(posts => {
         console.log("HERE ARE THE SUBSPEAK POSTS: " + JSON.stringify(posts));
-        
+
         res.json(posts)
       })
     })
@@ -194,7 +194,13 @@ module.exports = function (app) {
         SubspeakId: result.id,
         UserId: userId
       }).then(task => {
+        db.Votes.create({
+          votes: "upvote",
+          UserId: userId,
+          PostId: task.id
+        }).then(voted => {
 
+        })
       })
     })
 
@@ -240,30 +246,45 @@ module.exports = function (app) {
         }
       } else {
 
-        res.render("subspeaks", {
-        })
+        res.render("subspeaks", {})
       }
     })
   });
 
   //load the post on the page
-  app.get("/s/p/:postTitle", function(req, res){
+  app.get("/s/p/:postTitle", function (req, res) {
     db.Post.findOne({
       where: {
         title: req.params.postTitle
-      }
+      },
+
     }).then(result => {
       console.log(result)
-      res.render("postPage", {
-        postName: result.title,
-        postText: result.post_text,
-        postId: result.id
-        
+      db.Votes.findAll({
+        where: {
+          PostId: result.id
+        }
+      }).then(votes => {
+        console.log("Votes: " + JSON.stringify(votes));
+        let numberOfVotes = 0;
+        votes.forEach(element => {
+          if (element.votes === "upvote") {
+            numberOfVotes++;
+          } else {
+            numberOfVotes--;
+          }
+        });
+        res.render("postPage", {
+          postName: result.title,
+          postText: result.post_text,
+          postId: result.id,
+          votes: numberOfVotes
+        })
       })
     })
   })
 
-  app.get("/api/getComments/:id", function (req, res){
+  app.get("/api/getComments/:id", function (req, res) {
     db.Comments.findAll({
       where: {
         PostId: req.params.id
@@ -273,23 +294,21 @@ module.exports = function (app) {
     })
   })
   //get all post
-  app.get("/api/getAll", function (req, res){
-    db.Post.findAll({
-    }).then(post => {
+  app.get("/api/getAll", function (req, res) {
+    db.Post.findAll({}).then(post => {
       console.log(post);
       res.json(post)
     })
   })
   //post a reply to the post
-  app.post("/api/postComment", function (req, res){
+  app.post("/api/postComment", function (req, res) {
     let userId = checkForMultipleUsers(req);
     db.Comments.create({
       comments: req.body.comment,
       UserId: userId,
       PostId: req.body.id
-    }).then(result => {
-    })
-  } )
+    }).then(result => {})
+  })
   //get the users subscriptions
   app.get("/api/subscribe", function (req, res) {
     let userId = checkForMultipleUsers(req);
