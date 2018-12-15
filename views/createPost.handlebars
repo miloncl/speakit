@@ -1,0 +1,51 @@
+<div class="wrapper">
+
+  {{> navbar}}
+  <div class="container-fluid title_container">
+
+    <div class="row" id="title_row">
+
+      {{!-- title bar --}}
+      <div class="col-xl-6 d-flex justify-content-start left_col_title ">
+        <div class="pageTitle">
+          Create a Post
+        </div>
+      </div>
+      <div class="col-xl-6 d-flex justify-content-end right_col_title">
+
+
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid">
+
+    <div class="row" id="form_row">
+
+      <div class="col-xl-12">
+        <form action="POST" id="createPostForm">
+          <div class="form-group">
+
+            <label for="subspeakName">Select a Subspeak</label>
+            <select class="form-control" id="cpSSName" name="subspeakName">
+              <option value="" disabled selected value>Select an Option</option>
+            </select>
+            <label for="title">Title</label>
+            <input class="form-control" type="text" id="cpSSTitle" name="title" placeholder="Enter the Post's Title">
+            <label for="text">Post</label>
+            <input class="form-control" type="textarea" id="cpSSTextArea" name="text" placeholder="Enter Text">
+            <button class="btn btn-info btn-lg mainBtn" type="submit"><i class="fas fa-pen-nib"></i> Create</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+
+
+
+{{> leftBar}}
+{{> rightBar}}

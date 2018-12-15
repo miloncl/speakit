@@ -1,0 +1,51 @@
+<div class="wrapper">
+  {{> navbar}}
+
+  {{#if subspeakName}}
+
+
+  <div class="row" id="title_row">
+    {{!-- title bar --}}
+    <div class="col-xl-6 d-flex justify-content-start left_col_title ">
+      <div class="pageTitle">
+        {{subspeakName}}
+
+      </div>
+      <div class="pageDesc" id="subspeak_desc"> {{subspeakDescription}}</div>
+    </div>
+    <div class="col-xl-6 d-flex justify-content-center right_col_title" id="subscribe_btn_div">
+      {{#if subspeakName}}
+      {{#if subscribed}}
+      <button class="btn btn-info btn-lg mainBtn ml-auto" id="ssUnSubscribe" data-subspeak="{{subspeakName}}" data-id="{{subspeakId}}"
+        data-description="{{subspeakDescription}}">
+        Unsubscribe
+      </button>
+      {{else}}
+      <button class="btn btn-info btn-lg mainBtn ml-auto" id="ssSubscribe" data-subspeak="{{subspeakName}}" data-id="{{subspeakId}}"
+        data-description="{{subspeakDescription}}">
+        Subscribe
+      </button>
+      {{/if}}
+      {{/if}}
+    </div>
+
+  </div>
+  {{else}}
+  Subspeak not found. Create it!
+  {{/if}}
+
+  <div class="container-fluid">
+
+    <div class="row" id="post_row">
+
+    </div>
+  </div>
+
+</div>
+
+{{> leftBar}}
+
+{{> rightBar}}
+
+{{> loginModal}}
+{{> createSSModal}}
