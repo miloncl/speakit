@@ -24,8 +24,8 @@ app.use(expressValidator());
 var options = {
   host: 'bmsyhziszmhf61g1.cbetxkdyhwsb.us-east-1.rds.amazonaws.com',
   port: 3306,
-  user: 'fmm1if6ffeus9om8',
-  password: 'tfip2np6pqvzrhi0',
+  user: process.env.USER,
+  password: process.env.PASSWORD,
   database: 'tf0flkww6x5gjq2j'
 };
 
