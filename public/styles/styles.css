@@ -593,6 +593,11 @@ select {
   margin-top: 20px;
 }
 
+#ssError {
+  color: red;
+  font-family: 'Merriweather', sans-serif;
+}
+
 .pageDesc {
   font-family: "Merriweather", sans-serif;
   font-weight: 700;

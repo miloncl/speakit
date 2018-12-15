@@ -591,14 +591,9 @@ module.exports = function (app) {
     }).spread((results, created) => {
       console.log(`Created Subspeak : ${created}`)
       if (created === false) {
-        res.render("index", {
-
-          warnings: "That Subspeak already exists"
-        })
+        res.json(false) 
       } else {
-        res.render("index", {
-          warnings: "Subspeak created"
-        })
+   
 
         //automatically subscibe the user to their subspeak 
         db.SubbedSubspeaks.create({
@@ -607,6 +602,7 @@ module.exports = function (app) {
           SubspeakId: results.id,
           UserId: userId
         })
+        res.json(true)
       }
     })
   })

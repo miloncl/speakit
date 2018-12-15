@@ -391,10 +391,13 @@ $(document).ready(function () {
       createdBy: ""
     }
 
-    API.createSubspeak(data).then(function () {
-
+    API.createSubspeak(data).then(function (created) {
+      if(created === true){
+        location.reload();
+      } else {
+        $('#ssError').append("Subspeak Not Created");
+      }
     });
-    refreshSubscriptions();
 
     subspeakName.val("");
     subspeakDesc.val("");
