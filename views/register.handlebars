@@ -1,20 +1,55 @@
-<div class="container">
-  {{title}}
+<div class="wrapper">
+  {{> navbar}}
 
-  {{#if errors}}
-  {{#each errors}}
-  <div class="alert alert-danger">
-    {{this.msg}}
+  <div class="row" id="title_row">
+
+    {{!-- title bar --}}
+    <div class="col-xl-6 d-flex justify-content-start left_col_title ">
+      <div class="pageTitle">
+        Register
+      </div>
+    </div>
+    <div class="col-xl-6 d-flex justify-content-end right_col_title">
+      <div class="pageDesc ml-auto">Welcome to Speakit!</div>
+
+    </div>
   </div>
-  {{/each}}
-  {{/if}}
-  <form action="/api/register" method="POST">
-    <input type="text" name="username" placeholder="username">
-    <input type="email" name="email" placeholder="email">
-    <input type="password" name="password" placeholder="password">
-    <input type="password" name="passwordMatch" placeholder="password match">
-    <button type="submit">Register</button>
-  </form>
-  <a href="/login">login</a>
-  <a href="/">Home</a>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xl-12">
+
+        {{#if errors}}
+        {{#each errors}}
+        <div class="alert alert-danger">
+          {{this.msg}}
+        </div>
+        {{/each}}
+        {{/if}}
+        <form action="/api/register" method="POST" id="registerForm">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input class="form-control" type="text" name="username" placeholder="SteveRodgers">
+            <label for="username">Email</label>
+            <input class="form-control" type="email" name="email" placeholder="cptAmerica@avengers.com">
+            <label for="password">Password</label>
+            <input class="form-control" type="password" name="password" placeholder="********">
+            <label for="passwordMatch">Match Password</label>
+            <input class="form-control" type="password" name="passwordMatch" placeholder="********">
+            <button class="btn btn-info btn-lg mainBtn" type="submit">Register</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
 </div>
+</div>
+
+{{> leftBar}}
+
+{{> rightBar}}
+
+
+{{> loginModal}}
+{{> createSSModal}}

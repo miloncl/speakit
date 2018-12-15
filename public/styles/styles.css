@@ -589,6 +589,16 @@ select {
   font-weight: bold
 }
 
+#registerForm {
+  margin-top: 20px;
+}
+
+.pageDesc {
+  font-family: "Merriweather", sans-serif;
+  font-weight: 700;
+  color: #707070;
+}
+
 .pageTitle {
   font-family: 'Montserrat', sans-serif;
   color: #46A8D4;
