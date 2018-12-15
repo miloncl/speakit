@@ -356,6 +356,21 @@ select {
   margin-bottom: 20px;
 }
 
+.testSubspeaks {
+  font-family: "Montserrat", sans-serif;
+  font-size: 20px;
+  color: #46A8D4;
+  font-weight: 700;
+  font-size: 30px;
+}
+
+.testSubspeaksDesc {
+  font-family: "Merriweather", sans-serif;
+  font-size: 15px;
+  color: #707070;
+  font-weight: 700;
+}
+
 .post_container {
   background-color: #ffffff;
   max-width: 1200px;
