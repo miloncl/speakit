@@ -314,8 +314,8 @@ $(document).ready(function () {
 
             let randomSubspeaks = $(`
             <div class="col-xl-12 text-center">
-            <a href="/s/${subs.name}">${subs.name}</a>
-            <p>${subs.description}</p>
+            <a class="testSubspeaks" href="/s/${subs.name}">${subs.name}</a>
+            <p class="testSubspeaksDesc">${subs.description}</p>
             </div>
             `)
             $('#post_row').append(randomSubspeaks);
