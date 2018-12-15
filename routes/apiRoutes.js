@@ -9,6 +9,7 @@ module.exports = function (app) {
   app.get("/api/checkLogin", (req, res) => {
     let userId = checkForMultipleUsers(req);
     let userObj = {}
+
     if (req.isAuthenticated()) {
 
       db.Users.findOne({
@@ -52,6 +53,8 @@ module.exports = function (app) {
   app.get("/api/post", function (req, res) {
     let userId = checkForMultipleUsers(req);
     let postArray = [];
+    let userUpVoted = "";
+    let userDownVoted = "";
     if (req.isAuthenticated()) {
       db.Users.findOne({
         where: {
@@ -86,12 +89,22 @@ module.exports = function (app) {
                   }
                 }).then(votes => {
                   let countedVotes = 0;
+                  let userUpVoted = "";
+                  let userDownVoted = "";
                   votes.forEach(eachVote => {
+
                     if (eachVote.votes === "upvote") {
                       countedVotes++;
+                      if (eachVote.UserId === userId) {
+                        userUpVoted = "userUpVoted";
+                      }
                     } else {
                       countedVotes--;
+                      if (eachVote.UserId === userId) {
+                        userDownVoted = "userDownVoted";
+                      }
                     }
+                    //see if the logged in user upvoted or downvoted
 
                   })
                   db.Comments.findAll({
@@ -99,7 +112,7 @@ module.exports = function (app) {
                       PostId: result[i].id
                     }
                   }).then(comments => {
-                   
+
                     let post = {
                       id: result[i].id,
                       title: result[i].title,
@@ -107,10 +120,12 @@ module.exports = function (app) {
                       subspeak: userInfo.SubbedSubspeaks[j].subspeak_name,
                       votes: countedVotes,
                       op: originalPoster,
-                      comments: comments.length
+                      comments: comments.length,
+                      upVoted: userUpVoted,
+                      downVoted: userDownVoted
                     }
                     postArray.push(post)
-                    
+
                     if (j === userInfo.SubbedSubspeaks.length - 1 && i === result.length - 1) {
                       console.log(postArray)
                       res.json(postArray)
@@ -173,7 +188,7 @@ module.exports = function (app) {
                   PostId: posts[i].id
                 }
               }).then(comments => {
-               
+
                 let post = {
                   id: posts[i].id,
                   title: posts[i].title,
@@ -184,9 +199,9 @@ module.exports = function (app) {
                   comments: comments.length
                 }
                 postArray.push(post)
-                
-            
-                
+
+
+
                 if (i === posts.length - 1) {
                   res.json(postArray)
                 }
@@ -335,32 +350,48 @@ module.exports = function (app) {
 
   //load the post on the page
   app.get("/s/p/:postTitle", function (req, res) {
+    let numberOfVotes = 0;
     db.Post.findOne({
       where: {
         title: req.params.postTitle
       },
 
     }).then(result => {
-      console.log(result)
-      db.Votes.findAll({
+      db.Subspeaks.findOne({
         where: {
-          PostId: result.id
+          id: result.SubspeakId
         }
-      }).then(votes => {
-        console.log("Votes: " + JSON.stringify(votes));
-        let numberOfVotes = 0;
-        votes.forEach(element => {
-          if (element.votes === "upvote") {
-            numberOfVotes++;
-          } else {
-            numberOfVotes--;
+      }).then(subspeak => {
+
+        db.Users.findOne({
+          where: {
+            id: result.UserId
           }
-        });
-        res.render("postPage", {
-          postName: result.title,
-          postText: result.post_text,
-          postId: result.id,
-          votes: numberOfVotes
+        }).then(user => {
+
+          db.Votes.findAll({
+            where: {
+              PostId: result.id
+            }
+          }).then(votes => {
+            console.log("Votes: " + JSON.stringify(votes));
+            
+            votes.forEach(element => {
+              if (element.votes === "upvote") {
+                numberOfVotes++;
+              } else {
+                numberOfVotes--;
+              }
+            });
+            res.render("postPage", {
+              postName: result.title,
+              postText: result.post_text,
+              postId: result.id,
+              votes: numberOfVotes,
+              user: user.user_name,
+              subspeak: subspeak.name
+            })
+          })
         })
       })
     })
@@ -372,14 +403,33 @@ module.exports = function (app) {
         PostId: req.params.id
       }
     }).then(comments => {
-      res.json(comments)
+      let commentArray = [];
+      for (let i = 0; i < comments.length; i++) {
+
+        db.Users.findOne({
+          where: {
+            id: comments[i].UserId
+          }
+        }).then(users => {
+          let comment = {
+            comments: comments[i].comments,
+            user: users.user_name
+          }
+          commentArray.push(comment)
+          if (i === comments.length - 1) {
+            res.json(commentArray);
+
+          }
+        })
+      }
     })
   })
   //get all post
   app.get("/api/getAll", function (req, res) {
-
+    let userId = checkForMultipleUsers(req);
     let posts = []
-
+    let userUpVoted = "";
+    let userDownVoted = "";
     db.Post.findAll({}).then(post => {
 
       for (let i = 0; i < post.length; i++) {
@@ -389,7 +439,7 @@ module.exports = function (app) {
           }
         }).then(op => {
 
-          
+
           db.Subspeaks.findOne({
             where: {
               id: post[i].SubspeakId
@@ -398,43 +448,55 @@ module.exports = function (app) {
           }).then(subspeak => {
 
             db.Votes.findAll({
-            where: {
-              PostId: post[i].id
-            }
-          }).then(votes => {
-            
-            let countedVotes = 0;
-            votes.forEach(eachVote => {
-              if (eachVote.votes === "upvote") {
-                countedVotes++;
-              } else {
-                countedVotes--;
-              }
-
-            })
-            
-            db.Comments.findAll({
               where: {
-                PostId:post[i].id
+                PostId: post[i].id
               }
-            }).then(comments => {
-              
-              let fullPost = {
-                title: post[i].title,
-                subspeak: subspeak.name,
-                post_text: post[i].post_text,
-                votes: countedVotes,
-                op:op.user_name, 
-                comments: comments.length
-              }
-              posts.push(fullPost);
-              if (i === post.length - 1) {
-                res.json(posts)
-              }
+            }).then(votes => {
+
+              let countedVotes = 0;
+              let userUpVoted = "";
+              let userDownVoted = "";
+              votes.forEach(eachVote => {
+                if (eachVote.votes === "upvote") {
+                  countedVotes++;
+                  if (eachVote.UserId === userId) {
+
+                    userUpVoted = "userUpVoted";
+                  }
+                } else {
+                  countedVotes--;
+                  if (eachVote.UserId === userId) {
+
+                    userDownVoted = "userDownVoted"
+                  }
+                }
+
+              })
+
+              db.Comments.findAll({
+                where: {
+                  PostId: post[i].id
+                }
+              }).then(comments => {
+
+                let fullPost = {
+                  title: post[i].title,
+                  subspeak: subspeak.name,
+                  post_text: post[i].post_text,
+                  votes: countedVotes,
+                  op: op.user_name,
+                  comments: comments.length,
+                  upVoted: userUpVoted,
+                  downVoted: userDownVoted
+                }
+                posts.push(fullPost);
+                if (i === post.length - 1) {
+                  res.json(posts)
+                }
+              })
             })
           })
         })
-      })
       }
     });
   })
@@ -458,17 +520,23 @@ module.exports = function (app) {
     }).then((userSubs) => {
       let randomSpeaks = [];
       let usedNumbers = [];
-      if(userSubs.length === 0){
-        db.Subspeaks.findAll({ order: Sequelize.literal('rand()'), limit: 5 }).then(speaks => {
-            
-              console.log(`RandomSpeaks: ${speaks}`)
-            res.json({noSubs: true, subspeaks: speaks})
-        })
-      }else {
+      if (userSubs.length === 0) {
+        db.Subspeaks.findAll({
+          order: Sequelize.literal('rand()'),
+          limit: 5
+        }).then(speaks => {
 
-        
+          console.log(`RandomSpeaks: ${speaks}`)
+          res.json({
+            noSubs: true,
+            subspeaks: speaks
+          })
+        })
+      } else {
+
+
         console.log("SUBSCRIBED: " + JSON.stringify(userSubs));
-        
+
         res.json(userSubs)
       }
     })
@@ -484,8 +552,8 @@ module.exports = function (app) {
       SubspeakId: req.body.subspeakId,
       UserId: userId
     }).then(result => {
-      res.redirect(`/s/${req.body.name}`)
-
+      console.log("SUBSCRIBE" + result)
+      res.json(result)
     })
 
   })
@@ -498,11 +566,8 @@ module.exports = function (app) {
         SubspeakId: req.params.id,
         UserId: userId
       }
-    }).then(result => {
-      console.log(`DESTROY : ${JSON.stringify(result)}`)
-      res.redirect(`/s/${req.params.name}`)
-
     })
+    res.json("done")
   })
   //get all data from client js file
   app.post("/api/subspeaks", function (req, res) {
@@ -623,7 +688,7 @@ module.exports = function (app) {
         required: false
       }]
     }).then(result => {
-
+      console.log(result)
       if (result.Votes.length !== 0) {
         if (result.Votes.votes === "upvote") {
 

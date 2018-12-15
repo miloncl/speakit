@@ -8,11 +8,16 @@
       <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-body">
-          <h1>Login</h1>
+          <h4 class="modal-title">Login</h4>
           <form action="/api/login" method="POST">
-            <input type="text" name="username" placeholder="Username">
-            <input type="password" name="password" placeholder="Password">
-            <input type="submit" name="login" class="login loginmodal-submit" value="Login">
+            <div class="form-group">
+
+              <label for="username">Username</label>
+              <input class="form-control" type="text" name="username" placeholder="SteveRodgers">
+              <label for="password">Password</label>
+              <input class="form-control" type="password" name="password" placeholder="***************">
+              <button class="btn btn-info btn-lg mainBtn" type="submit"><i class="far fa-user"></i> Login</button>
+            </div>
           </form>
           <p>Dont have an account <a href="/register">Register</a></p>
         </div>

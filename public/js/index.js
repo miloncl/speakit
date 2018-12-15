@@ -164,11 +164,11 @@ $(document).ready(function () {
         `)
 
         let ul = $(` <ul>
-        <li><a href="/"><i class="far fa-newspaper menuIcons" id="myFeed"></i></a></li>
-        <li><a href="/all"><i class="fas fa-list-ol menuIcons" id="all"></i></li>
-        <li><a href="/createPost"><i class="far fa-edit menuIcons" id="createPost"></i></a></li>
+        <li><a href="/"><i class="far fa-newspaper menuIcons" id="myFeed" title="My Feed"></i></a></li>
+        <li><a href="/all"><i class="fas fa-list-ol menuIcons" id="all" title="All Posts"></i></li>
+        <li><a href="/createPost"><i class="far fa-edit menuIcons" title="Create a Post" id="createPost"></i></a></li>
         <li><button type="button" data-toggle="modal" data-target="#ssModal" id="createSSBtn"><i class="fas fa-pen-nib menuIcons"
-              id="createSS"></i></button></li>
+              id="createSS" title="Create a Subspeak"></i></button></li>
       </ul>`)
         $('.username').append(dropdown);
         $('#navList').append(ul)
@@ -231,8 +231,7 @@ $(document).ready(function () {
                   </div>
                   <div class="commentFooter d-flex">
                     <ul>
-                      <li>User</li>
-                      <li>Voting</li>
+                      <li> <li class="postIcons"><i class="fas fa-user-edit"></i><span>${element.user}</span></li></li>
                     </ul>
                   </div>
                 </div>
@@ -288,14 +287,15 @@ $(document).ready(function () {
           mainDiv.append(description);
           $(".subspeak_main_div").append(mainDiv)
 
-          //if on the create post page load the posts into the dropdown
-          if (window.location.pathname === ("/createPost")) {
-            usersSubs.forEach(element => {
-              let option = $(`<option value=${element.subspeak_name}>${element.subspeak_name}</option>`);
-              $("#cpSSName").append(option);
-            })
-          }
+         
         });
+         //if on the create post page load the posts into the dropdown
+         if (window.location.pathname === ("/createPost")) {
+          usersSubs.forEach(element => {
+            let option = $(`<option value=${element.subspeak_name}>${element.subspeak_name}</option>`);
+            $("#cpSSName").append(option);
+          })
+        }
       } else {
         console.log(usersSubs);
         //no subscriptions
@@ -343,9 +343,8 @@ $(document).ready(function () {
           <div class="d-flex post_footer">
             <ul>
               <li class="postIcons"><i class="far fa-comments"></i><span>${element.comments}</span></li>
-              <li class="postIcons"><i class="far fa-bookmark"></i></li>
               <li class="postIcons"><i class="fas fa-user-edit"></i><span>${element.op}</span></li>
-              <li class="postIcons"><button class="upvote"><i class="fas fa-arrow-up"></i></button><span>${element.votes}</span><button class="downvote"><i class="fas fa-arrow-down"></i></button></li>
+              <li class="postIcons"><button data-postid="${element.id}" class="upvote "><i class="fas fa-arrow-up ${element.upVoted}"></i></button><span>${element.votes}</span><button data-postid="${element.id}" class="downvote "><i class="fas fa-arrow-down ${element.downVoted}"></i></button></li>
             </ul>
 
        
@@ -372,6 +371,7 @@ $(document).ready(function () {
     })
     refreshPosts();
     console.log("POSTED")
+
     $('#cpSSTitle').val("");
     $('#cpSSTextArea').val("");
   })
@@ -391,7 +391,9 @@ $(document).ready(function () {
       createdBy: ""
     }
 
-    API.createSubspeak(data).then(function () {});
+    API.createSubspeak(data).then(function () {
+
+    });
     refreshSubscriptions();
 
     subspeakName.val("");
@@ -407,9 +409,13 @@ $(document).ready(function () {
       description: $("#ssSubscribe").attr("data-description"),
       subspeakId: $("#ssSubscribe").attr("data-id")
     }
-    API.subscribe(data).then(function () {
-
+    API.subscribe(data).then(function (result) {
+      console.log(result)
+      if(result){
+        location.reload();
+      }
     })
+    // location.reload();
   })
 
   //when the user clicks the subscribe button on the subspeak page
@@ -418,26 +424,32 @@ $(document).ready(function () {
     var subspeakName = $("#ssUnSubscribe").attr("data-subspeak");
     var id = $("#ssUnSubscribe").attr("data-id");
 
-    API.unSubscribe(id, subspeakName).then(function () {
-      location.reload();
+    API.unSubscribe(id, subspeakName).then(function (data) {
+      if(data === "done"){
+        location.reload();
+      }
     })
+    
+    
   })
 
   //when a user clicks upvote
   $(document).on("click", ".upvote", function () {
-    let postId = $(this).attr("data-postId")
+    let postId = $(this).attr("data-postid")
     let data = {};
     API.upvotePost(postId, data).then(done => {
 
     })
+    setTimeout(function () {location.reload()}, 2000)
   })
   //when a user clicks downvote
   $(document).on("click", ".downvote", function () {
-    let postId = $(this).attr("data-postId")
+    let postId = $(this).attr("data-postid")
     let data = {};
     API.downvotePost(postId, data).then(done => {
 
     })
+    location.reload();
   })
   //post a comment
   $(document).on("click", "#postAComment", function () {
@@ -448,11 +460,15 @@ $(document).ready(function () {
       id: postId,
       comment: commentText
     }
+
     API.postComment(data).then(comment => {
       if (comment) {
-        location.reload();
       }
     })
+    if(commentText !== ""){
+
+      location.reload();
+    }
   })
 
 })

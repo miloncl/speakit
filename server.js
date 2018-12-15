@@ -64,9 +64,17 @@ passport.use(new LocalStrategy(
         user_name: username
       }
     }).then((results) => {
-      if (results.length === 0) {
+      if (results === null) {
         //there is no user in the db
-        done(null, false);
+        if (!results){
+
+          return done(null, false);
+        }
+
+        if(!user.validPassword(password)){
+          return done(null, false);
+        }
+
       }
       var checkpw = bcrypt.compareSync(password, results.password);
 

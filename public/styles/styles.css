@@ -21,6 +21,11 @@ ul li {
 
 a:hover {
   text-decoration: none;
+  color: #7D7D7D;
+}
+
+.menuIcons:hover {
+  color: #7D7D7D;
 }
 
 .fa,
@@ -88,8 +93,30 @@ a:hover {
   height: 100%;
 }
 
+.replyButton {
+  background: none;
+  color: #707070;
+  font-weight: 700;
+  border: none;
+
+}
+
+.postPagePostContainer {
+  border-bottom: 1px solid #00000028;
+  padding-bottom: 10px;
+}
+
+
+.replyButton:hover {
+  background: none;
+  color: #46A8D4;
+}
+
 .postText {
-  margin: auto;
+  font-family: 'Merriweather', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  color: #707070;
 }
 
 .menuIcons {
@@ -99,7 +126,7 @@ a:hover {
 }
 
 .postIcons {
-  margin: 10px;
+  margin: 5px;
 }
 
 .postIcons>i {
@@ -117,7 +144,7 @@ a:hover {
   color: #707070;
   font-family: 'Montserrat', sans-serif;
   font-weight: 700;
-
+  font-size: 13px;
 }
 
 .post_description {
@@ -199,6 +226,10 @@ label {
   font-weight: 700;
 }
 
+select {
+  margin: 0 !important;
+}
+
 .close {
   margin: 0 !important;
   padding: 0 !important;
@@ -224,6 +255,11 @@ label {
 #createSSBtn {
   border: none;
   background-color: #ffffff;
+}
+
+#createPostForm {
+  margin-top: 20px;
+
 }
 
 .left_col_title {
@@ -338,17 +374,35 @@ label {
 }
 
 .post_footer {
-
+  padding-left: 20px;
   border-top: 1px solid #00000014;
 }
 
 .commentContainer {
-  background-color: #ffffff;
   max-width: 1200px;
   width: 100%;
   margin: auto;
   border: 1px solid #00000014;
-  margin-top: 40px;
+  margin-top: 10px;
+}
+
+#commentTextArea {
+  width: 100%;
+
+}
+
+#subspeak_desc {
+  font-family: 'Merriweather', sans-serif;
+  color: #707070;
+  font-weight: 700;
+  margin-left: 20px;
+  font-size: 11px;
+
+}
+
+
+.right_col_title {
+  align-items: center;
 }
 
 .commentBody {
@@ -356,12 +410,22 @@ label {
   margin-top: 30px;
   padding-left: 30px;
   padding-bottom: 30px;
+  font-family: 'Merriweather', sans-serif;
+  color: #707070;
 }
 
 .commentFooter {
   align-items: flex-start;
   padding: 10px;
   padding-bottom: 10px;
+}
+
+.userUpVoted {
+  color: #46A8D4 !important;
+}
+
+.userDownVoted {
+  color: rgb(224, 117, 109) !important;
 }
 
 .right_menu {

@@ -5,28 +5,36 @@
   {{#if postName}}
 
 
-  <div class="row" id="title_row">
-    {{!-- title bar --}}
-    <div class="col-xl-6 d-flex justify-content-start left_col_title ">
-      <div class="title">
-        <h3 id="postName" data-id="{{postId}}">{{postName}}</h3>
+
+
+  <div class="col-xl-12 postPagePostContainer">
+    <div class="post_container">
+
+      <div class="post_title_container d-flex">
+        <h3 class="title" id="postName" data-id="{{postId}}"><a href="/s/p/{{postName}}">{{postName}}</a></h3>
+        <a href="/s/${element.subspeak}" class="subspeak_name_post ml-auto">{{subspeak}}</a>
+      </div>
+
+      <div class="post_description">
+        <p class="postText">{{postText}}</p>
+      </div>
+      <div class="d-flex post_footer">
+        <ul>
+          <li class="postIcons"> <button type="button" class="btn btn-primary replyButton" data-toggle="modal"
+              data-target="#exampleModal">
+              Reply</li>
+          <li class="postIcons"><i class="fas fa-user-edit"></i><span>{{user}}</span></li>
+          <li class="postIcons"><i class="fas fa-vote-yea"></i><span> {{votes}}</span></li>
+        </ul>
+
 
       </div>
     </div>
 
-    <div class="col-xl-6 d-flex justify-content-end right_col_title">
-      Votes {{votes}}
-    </div>
   </div>
 
-  <div class="postTextDiv col-xl-12 d-flex">
-    <p class="postText">{{postText}}</p>
-    <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-      Reply
-    </button>
 
-  </div>
+
   {{else}}
   Post Not Found! Create it!
   {{/if}}
@@ -55,12 +63,16 @@
         </button>
       </div>
       <div class="modal-body">
-        <textarea name="" id="commentTextArea" cols="30" rows="10"></textarea>
+        <textarea name="" id="commentTextArea" cols="30" rows="10" placeholder="Create a comment"></textarea>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button data-id="{{postId}}" type="button" class="btn btn-primary" id="postAComment">Post A Comment</button>
+
+        <button data-id="{{postId}}" id="postAComment" class="btn btn-info btn-lg mainBtn" type="submit"><i class="fas fa-pen-nib"></i>
+          Comment</button>
       </div>
     </div>
   </div>
 </div>
+
+{{> loginModal}}
+{{> createSSModal}}

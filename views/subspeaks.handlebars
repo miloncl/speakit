@@ -6,32 +6,29 @@
 
   <div class="row" id="title_row">
     {{!-- title bar --}}
-    <div class="col-xl-4 d-flex justify-content-start left_col_title ">
-      <div class="title">
+    <div class="col-xl-6 d-flex justify-content-start left_col_title ">
+      <div class="pageTitle">
         {{subspeakName}}
-        {{subspeakDescription}}
+
       </div>
+      <div class="pageDesc" id="subspeak_desc"> {{subspeakDescription}}</div>
     </div>
-    <div class="col-xl-4 d-flex justify-content-center" id="subscribe_btn_div">
+    <div class="col-xl-6 d-flex justify-content-center right_col_title" id="subscribe_btn_div">
       {{#if subspeakName}}
       {{#if subscribed}}
-      <button id="ssUnSubscribe" data-subspeak="{{subspeakName}}" data-id="{{subspeakId}}" data-description="{{subspeakDescription}}">
+      <button class="btn btn-info btn-lg mainBtn ml-auto" id="ssUnSubscribe" data-subspeak="{{subspeakName}}" data-id="{{subspeakId}}"
+        data-description="{{subspeakDescription}}">
         Unsubscribe
       </button>
       {{else}}
-      <button id="ssSubscribe" data-subspeak="{{subspeakName}}" data-id="{{subspeakId}}" data-description="{{subspeakDescription}}">
+      <button class="btn btn-info btn-lg mainBtn ml-auto" id="ssSubscribe" data-subspeak="{{subspeakName}}" data-id="{{subspeakId}}"
+        data-description="{{subspeakDescription}}">
         Subscribe
       </button>
       {{/if}}
       {{/if}}
     </div>
-    <div class="col-xl-4 d-flex justify-content-end right_col_title">
-      <ul>
-        <li>Useful</li>
-        <li>Informative</li>
-        <li>Educational</li>
-      </ul>
-    </div>
+
   </div>
   {{else}}
   Subspeak not found. Create it!
@@ -49,3 +46,6 @@
 {{> leftBar}}
 
 {{> rightBar}}
+
+{{> loginModal}}
+{{> createSSModal}}
