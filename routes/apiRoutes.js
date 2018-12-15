@@ -402,6 +402,8 @@ module.exports = function (app) {
         PostId: req.params.id
       }
     }).then(comments => {
+      console.log("WAHTR: " + comments)
+      
       let commentArray = [];
       for (let i = 0; i < comments.length; i++) {
 
@@ -416,6 +418,7 @@ module.exports = function (app) {
           }
           commentArray.push(comment)
           if (i === comments.length - 1) {
+          
             res.json(commentArray);
 
           }

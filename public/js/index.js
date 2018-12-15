@@ -126,7 +126,7 @@ var API = {
 
 $(document).ready(function () {
   checkForUser();
-
+  
   function checkForUser() {
 
     API.checkUser().then((user) => {
@@ -134,7 +134,7 @@ $(document).ready(function () {
       if (user.logged === false) {
         //force go to /all
         let leftBarTitle = $(`<span id="subspeaks_title_left_bar">LOGIN TO SEE SUBSPEAKS</span>`)
-        let leftImage = $(`<img id="leftBarPlaceholder" src="../images/leftMenuPlaceholder.png">`)
+        let leftImage = $(`<img id="leftBarPlaceholder" src="https://i.imgur.com/Gb8clHQ.png">`)
         let loginBtn = $('<button type="button" class="btn btn-info btn-lg mainBtn" data-toggle="modal" data-target="#myModal"><i class="fas fa-sign-in-alt loginIcon"></i>Login</button>')
 
         let ul = $(` <ul>
@@ -147,7 +147,9 @@ $(document).ready(function () {
         $('.subspeak_main_div').append(leftImage);
         //load the all page
         loadAll();
-
+        if(window.location.pathname.includes("/s/p/")){
+          loadComments();
+        }
       } else {
         let leftBarTitle = $(`<span id="subspeaks_title_left_bar">MY SUBSPEAKS</span>`)
         //the right bar content when logged in 
@@ -215,33 +217,9 @@ $(document).ready(function () {
 
 
         }
-        //load the posts page
-        if (window.location.pathname.includes("/p/")) {
-          let postId = $("#postName").attr('data-id');
-          API.getComments(postId).then(result => {
-            console.log(result)
-
-            result.forEach(element => {
-              let newComment = $(
-                `<div class="col-xl-12">
-                <div class="row" id="comments_row">
-                <div class="commentContainer">
-                  <div class="commentBody d-flex">
-                    ${element.comments}
-                  </div>
-                  <div class="commentFooter d-flex">
-                    <ul>
-                      <li> <li class="postIcons"><i class="fas fa-user-edit"></i><span>${element.user}</span></li></li>
-                    </ul>
-                  </div>
-                </div>
-              </div> 
-                </div>`
-              )
-              $("#comments_row").append(newComment);
-            });
-          })
-
+      
+        if(window.location.pathname.includes("/s/p/")){
+          loadComments();
         }
 
       }
@@ -249,6 +227,34 @@ $(document).ready(function () {
 
   }
 
+  function loadComments(){
+    console.log('run')
+    let postId = $("#postName").attr('data-id');
+    $("#lefBarPlaceholder").attr("src", "../../images/leftMenuPlaceholder.png")
+    API.getComments(postId).then(result => {
+      console.log(result)
+
+      result.forEach(element => {
+        let newComment = $(
+          `<div class="col-xl-12">
+          <div class="row" id="comments_row">
+          <div class="commentContainer">
+            <div class="commentBody d-flex">
+              ${element.comments}
+            </div>
+            <div class="commentFooter d-flex">
+              <ul>
+                <li> <li class="postIcons"><i class="fas fa-user-edit"></i><span>${element.user}</span></li></li>
+              </ul>
+            </div>
+          </div>
+        </div> 
+          </div>`
+        )
+        $("#comments_row").append(newComment);
+      });
+    })
+  }
   function loadAll() {
     if (window.location.pathname === "/all") {
 
@@ -299,7 +305,7 @@ $(document).ready(function () {
       } else {
         console.log(usersSubs);
         //no subscriptions
-        let leftImage = $(`<img id="leftBarPlaceholder" src="../images/leftMenuPlaceholder.png">`)
+        let leftImage = $(`<img id="leftBarPlaceholder" src="https://i.imgur.com/Gb8clHQ.png">`)
         let subscribeMessage = $(`
         <div class="col-xl-12  text-center">
         <p id="subscribeSuggestion">SUBSCRIBE TO SUBSPEAKS TO SEE POSTS</p>
