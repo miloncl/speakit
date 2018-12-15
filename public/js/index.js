@@ -115,7 +115,7 @@ var API = {
       type: "POST",
       data: JSON.stringify(data)
     });
-  }, 
+  },
   deleteExample: function (id) {
     return $.ajax({
       url: "api/examples/" + id,
@@ -132,65 +132,30 @@ $(document).ready(function () {
     API.checkUser().then((user) => {
 
       if (user.logged === false) {
-
+        //force go to /all
+        let leftBarTitle = $(`<span id="subspeaks_title_left_bar">LOGIN TO SEE SUBSPEAKS</span>`)
+        let leftImage = $(`<img id="leftBarPlaceholder" src="../images/leftMenuPlaceholder.png">`)
         let loginBtn = $('<button type="button" class="btn btn-info btn-lg mainBtn" data-toggle="modal" data-target="#myModal"><i class="fas fa-sign-in-alt loginIcon"></i>Login</button>')
 
         let ul = $(` <ul>
-        <li><a href="/"><i class="far fa-newspaper" id="myFeed"></i></a></li>
-        <li><a href="/"><i class="fas fa-cog" id="settings"></i></li>
+        <li><a href="/"><i class="fas fa-list-ol" id="all"></i></li>
         
         </ul>`)
         $('.username').append(loginBtn)
         $('#navList').append(ul)
+        $('#subspeaks_title_div').append(leftBarTitle);
+        $('.subspeak_main_div').append(leftImage);
+        //load the all page
+        loadAll();
 
-        API.getAll().then(post => {
-
-          console.log(post);
-
-          //create post
-
-          post.forEach(element => {
-            let newPost = $(
-              `<div class="col-xl-12">
-              <div class="post_container">
-
-                  <div class="post_title_container d-flex">
-                    <h3 class="title"><a href="/s/p/${element.title}">${element.title}</a></h3>
-                    <a href="/s/${element.subspeak}"class="subspeak_name ml-auto">${element.subspeak}</a>
-                  </div>
-                  
-                  <div class="post_description"> 
-                  ${element.post_text}
-                  </div>
-                  <div class="d-flex post_footer">
-                    <ul>
-                      <li><i class="far fa-comments"></i></li>
-                      <li><i class="far fa-bookmark"></i></li>
-                      <li><i class="fas fa-user-edit"></i></li>
-                      <li><button class="upvote"><i class="fas fa-arrow-up"></i></button>${element.votes}<button class="downvote"><i class="fas fa-arrow-down"></i></button></li>
-                    </ul>
-
-                  <span class="badges ml-auto">
-                  <ul>
-                  <li><i class="far fa-smile"></i></li>
-                  <li><i class="fas fa-info"></i></li>
-                  <li><i class="fas fa-pencil-alt"></i></li>
-                </ul>
-                  </span>
-                </div>
-              </div>`)
-
-            $("#post_row").prepend(newPost);
-          });
-        })
       } else {
-
+        let leftBarTitle = $(`<span id="subspeaks_title_left_bar">MY SUBSPEAKS</span>`)
         //the right bar content when logged in 
         let dropdown = $(`
 
-        <div class="btn-group">
+        <div class="btn-group d-flex justify-content-center">
           <button type="button" class="btn dropdown dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <p>${user.username}<i class="fa down-arrow fa-angle-down"></i></p>
+          <p class="dropdownP"><i class="far fa-user"></i><span id="dropdownUsername">${user.username}</span><i class="fa down-arrow fa-angle-down"></i></p>
           </button>
           <div class="dropdown-menu">
             <a class="dropdown-item" href="/logout">Logout</a>
@@ -199,99 +164,52 @@ $(document).ready(function () {
         `)
 
         let ul = $(` <ul>
-        <li><a href="/"><i class="far fa-newspaper" id="myFeed"></i></a></li>
-        <li><a href="/"><i class="fas fa-cog" id="settings"></i></li>
-        <li><a href="/createPost"><i class="far fa-edit" id="createPost"></i></a></li>
-        <li><button type="button" data-toggle="modal" data-target="#ssModal" id="createSSBtn"><i class="fas fa-pen-nib"
+        <li><a href="/"><i class="far fa-newspaper menuIcons" id="myFeed"></i></a></li>
+        <li><a href="/all"><i class="fas fa-list-ol menuIcons" id="all"></i></li>
+        <li><a href="/createPost"><i class="far fa-edit menuIcons" id="createPost"></i></a></li>
+        <li><button type="button" data-toggle="modal" data-target="#ssModal" id="createSSBtn"><i class="fas fa-pen-nib menuIcons"
               id="createSS"></i></button></li>
       </ul>`)
         $('.username').append(dropdown);
         $('#navList').append(ul)
+        $('#subspeaks_title_div').append(leftBarTitle);
         refreshSubscriptions();
 
         //if on my feed page
         if (window.location.pathname === "/") {
-          API.getPost().then(post => {
+          API.getPost().then(posts => {
+            function sortNumber(a, b) {
+              return a.votes - b.votes;
+            }
 
-            post.forEach(element => {
-              console.log(element)
-              let newPost = $(
-
-                `<div class="col-xl-12">
-                <div class="post_container">
-
-                    <div class="post_title_container d-flex">
-                      <h3 class="title"><a href="/s/p/${element.title}">${element.title}</a></h3>
-                      <a href="/s/${element.subspeak}"class="subspeak_name ml-auto">${element.subspeak}</a>
-                    </div>
-                    
-                    <div class="post_description"> 
-                    ${element.post_text}
-                    </div>
-                    <div class="d-flex post_footer">
-                      <ul>
-                        <li><i class="far fa-comments"></i></li>
-                        <li><i class="far fa-bookmark"></i></li>
-                        <li><i class="fas fa-user-edit"></i></li>
-                      <li><button data-postId="${element.id}" class="upvote"><i class="fas fa-arrow-up"></i></button>${element.votes}<button data-postId="${element.id}" class="downvote"><i class="fas fa-arrow-down"></i></button></li>
-                      </ul>
-
-                    <span class="badges ml-auto">
-                    <ul>
-                    <li><i class="far fa-smile"></i></li>
-                    <li><i class="fas fa-info"></i></li>
-                    <li><i class="fas fa-pencil-alt"></i></li>
-                  </ul>
-                    </span>
-                  </div>
-                </div>`)
-
-              $("#post_row").prepend(newPost);
+            posts.sort(sortNumber);
+            posts.forEach(element => {
+              addPostToPage(element);
             });
 
           })
         }
 
-        //load the subspeak posts
+        //if on /all page
+        loadAll();
+        //if on subspeaks page
         if (window.location.pathname.includes("/s/") && !window.location.pathname.includes("/p/")) {
 
           let subspeakName = window.location.pathname.split("/");
           subspeakName = subspeakName[2]
-          console.log(subspeakName)
+        
+
           API.getSubspeaksPosts(subspeakName).then(posts => {
+            //sort posts by votes
+
+            function sortNumber(a, b) {
+              return a.votes - b.votes;
+            }
+
+            posts.sort(sortNumber);
+
             posts.forEach(element => {
-              let newPost = $(
-
-                `<div class="col-xl-12">
-                <div class="post_container">
-
-                    <div class="post_title_container d-flex">
-                      <h3 class="title">${element.title}</h3>
-                      <a href="/s/${subspeakName}"class="subspeak_name ml-auto">${subspeakName}</a>
-                    </div>
-                    
-                    <div class="post_description"> 
-                    ${element.post_text}
-                    </div>
-                    <div class="d-flex post_footer">
-                      <ul>
-                        <li><i class="far fa-comments"></i></li>
-                        <li><i class="far fa-bookmark"></i></li>
-                        <li><i class="fas fa-user-edit"></i></li>
-                        <li><button data-postId="${element.id}" class="upvote"><i class="fas fa-arrow-up"></i></button>${element.votes}<button data-postId="${element.id}" class="downvote"><i class="fas fa-arrow-down"></i></button></li>
-                      </ul>
-
-                    <span class="badges ml-auto">
-                    <ul>
-                    <li><i class="far fa-smile"></i></li>
-                    <li><i class="fas fa-info"></i></li>
-                    <li><i class="fas fa-pencil-alt"></i></li>
-                  </ul>
-                    </span>
-                  </div>
-                </div>`)
-
-              $("#post_row").prepend(newPost);
+              addPostToPage(element);
             });
           })
 
@@ -332,32 +250,110 @@ $(document).ready(function () {
 
   }
 
+  function loadAll() {
+    if (window.location.pathname === "/all") {
+
+
+      API.getAll().then(posts => {
+
+        function sortNumber(a, b) {
+          return a.votes - b.votes;
+        }
+
+        posts.sort(sortNumber);
+        posts.forEach(element => {
+          addPostToPage(element);
+        });
+      })
+    }
+
+  }
+
   function refreshSubscriptions() {
     API.getSubscribed().then((usersSubs) => {
-      console.log(usersSubs)
+      console.log(`USERSUBS: ${usersSubs}`)
+
 
       $(".subspeak_main_div").empty();
-      usersSubs.forEach(element => {
 
-        let heading = $(`<h3 class="subspeak_name"><a class="sideMenuSubspeakButtons" data-id="${element.SubspeakId}" href="/s/${element.subspeak_name}">${element.subspeak_name}</a></h3>`)
-        let description = $(`<p class="subspeak_description">${element.subspeak_description}</p>`)
-        let mainDiv = $(`<div class="sidebar_subspeaks d-flex flex-column align-items-start justify-content-center"></div>`)
 
-        mainDiv.append(heading);
-        mainDiv.append(description);
-        $(".subspeak_main_div").append(mainDiv)
+      if (usersSubs.noSubs !== true) {
+        usersSubs.forEach(element => {
 
-        //if on the create post page load the posts into the dropdown
-        if (window.location.pathname === ("/createPost")) {
-          usersSubs.forEach(element => {
-            let option = $(`<option value=${element.subspeak_name}>${element.subspeak_name}</option>`);
-            $("#cpSSName").append(option);
+          let heading = $(`<h3 class="subspeak_name"><a class="sideMenuSubspeakButtons" data-id="${element.SubspeakId}" href="/s/${element.subspeak_name}">${element.subspeak_name}</a></h3>`)
+          let description = $(`<p class="subspeak_description">${element.subspeak_description}</p>`)
+          let mainDiv = $(`<div class="sidebar_subspeaks d-flex flex-column align-items-start justify-content-center"></div>`)
+
+          mainDiv.append(heading);
+          mainDiv.append(description);
+          $(".subspeak_main_div").append(mainDiv)
+
+          //if on the create post page load the posts into the dropdown
+          if (window.location.pathname === ("/createPost")) {
+            usersSubs.forEach(element => {
+              let option = $(`<option value=${element.subspeak_name}>${element.subspeak_name}</option>`);
+              $("#cpSSName").append(option);
+            })
+          }
+        });
+      } else {
+        console.log(usersSubs);
+        //no subscriptions
+        let leftImage = $(`<img id="leftBarPlaceholder" src="../images/leftMenuPlaceholder.png">`)
+        let subscribeMessage = $(`
+        <div class="col-xl-12  text-center">
+        <p id="subscribeSuggestion">SUBSCRIBE TO SUBSPEAKS TO SEE POSTS</p>
+        <p id="subscribeSuggestionSecondary">Check out these Subspeaks</p>
+        </div>
+        `)
+        $('.subspeak_main_div').append(leftImage);
+        if (window.location.pathname === "/") {
+          $('#post_row').append(subscribeMessage);
+
+          usersSubs.subspeaks.forEach(subs => {
+
+            let randomSubspeaks = $(`
+            <div class="col-xl-12 text-center">
+            <a href="/s/${subs.name}">${subs.name}</a>
+            <p>${subs.description}</p>
+            </div>
+            `)
+            $('#post_row').append(randomSubspeaks);
           })
         }
-      });
+
+
+      }
     })
   }
 
+  function addPostToPage(element) {
+    let newPost = $(
+      `<div class="col-xl-12">
+      <div class="post_container">
+
+          <div class="post_title_container d-flex">
+            <h3 class="title"><a href="/s/p/${element.title}">${element.title}<i class="fas fa-chevron-right"></i></a></h3>
+            <a href="/s/${element.subspeak}"class="subspeak_name_post ml-auto">${element.subspeak}</a>
+          </div>
+          
+          <div class="post_description"> 
+          ${element.post_text}
+          </div>
+          <div class="d-flex post_footer">
+            <ul>
+              <li class="postIcons"><i class="far fa-comments"></i><span>${element.comments}</span></li>
+              <li class="postIcons"><i class="far fa-bookmark"></i></li>
+              <li class="postIcons"><i class="fas fa-user-edit"></i><span>${element.op}</span></li>
+              <li class="postIcons"><button class="upvote"><i class="fas fa-arrow-up"></i></button><span>${element.votes}</span><button class="downvote"><i class="fas fa-arrow-down"></i></button></li>
+            </ul>
+
+       
+        </div>
+      </div>`)
+
+    $("#post_row").prepend(newPost);
+  }
   function refreshPosts() {
     console.log("refresh posts");
   }
@@ -428,18 +424,18 @@ $(document).ready(function () {
   })
 
   //when a user clicks upvote
-  $(document).on("click", ".upvote", function() {
+  $(document).on("click", ".upvote", function () {
     let postId = $(this).attr("data-postId")
     let data = {};
-    API.upvotePost(postId, data).then(done =>{
+    API.upvotePost(postId, data).then(done => {
 
     })
   })
   //when a user clicks downvote
-  $(document).on("click", ".downvote", function() {
+  $(document).on("click", ".downvote", function () {
     let postId = $(this).attr("data-postId")
     let data = {};
-    API.downvotePost(postId, data).then(done =>{
+    API.downvotePost(postId, data).then(done => {
 
     })
   })

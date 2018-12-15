@@ -2,10 +2,18 @@ var db = require("../models");
 var passport = require('passport');
 module.exports = function (app) {
 
-  app.get("/", (req, res) =>{
-    res.render("index", {}) 
+  app.get("/", (req, res) => {
+
+    if (req.user === undefined) {
+      res.redirect("/all");
+    } else {
+      res.render("index", {})
+    }
   })
 
+  app.get("/all", (req, res) => {
+    res.render("all", {})
+  })
   app.get("/profile", function (req, res) {
     if (req.isAuthenticated()) {
 
@@ -19,7 +27,7 @@ module.exports = function (app) {
   });
 
 
-  app.get("/createPost", function(req, res){
+  app.get("/createPost", function (req, res) {
 
     res.render("createPost", {})
 
@@ -32,7 +40,7 @@ module.exports = function (app) {
     })
   });
 
-  
+
 
   app.get('/logout', function (req, res) {
     req.logout()
@@ -46,3 +54,12 @@ module.exports = function (app) {
   });
 
 };
+
+//req.login uses these functions 
+passport.serializeUser(function (user_id, done) {
+  done(null, user_id)
+})
+//this gets the users info
+passport.deserializeUser(function (user_id, done) {
+  done(null, user_id);
+});

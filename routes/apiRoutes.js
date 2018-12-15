@@ -3,7 +3,7 @@ var expressValidator = require("express-validator");
 var bcrypt = require('bcrypt');
 var saltRounds = 10;
 var passport = require('passport');
-
+var Sequelize = require("sequelize");
 module.exports = function (app) {
 
   app.get("/api/checkLogin", (req, res) => {
@@ -65,6 +65,7 @@ module.exports = function (app) {
           required: false
         }]
       }).then(userInfo => {
+
         for (let j = 0; j < userInfo.SubbedSubspeaks.length; j++) {
           db.Post.findAll({
             where: {
@@ -73,36 +74,53 @@ module.exports = function (app) {
           }).then(result => {
             //for each post get the votes and respond to request
             for (let i = 0; i < result.length; i++) {
-              db.Votes.findAll({
+              db.Users.findOne({
                 where: {
-                  PostId: result[i].id
+                  id: result[i].UserId
                 }
-              }).then(votes => {
-                let countedVotes = 0;
-                votes.forEach(eachVote => {
-                  if(eachVote.votes === "upvote"){
-                    countedVotes++;
-                  } else {
-                    countedVotes--;
+              }).then(op => {
+                let originalPoster = op.user_name;
+                db.Votes.findAll({
+                  where: {
+                    PostId: result[i].id
                   }
+                }).then(votes => {
+                  let countedVotes = 0;
+                  votes.forEach(eachVote => {
+                    if (eachVote.votes === "upvote") {
+                      countedVotes++;
+                    } else {
+                      countedVotes--;
+                    }
+
+                  })
+                  db.Comments.findAll({
+                    where: {
+                      PostId: result[i].id
+                    }
+                  }).then(comments => {
+                   
+                    let post = {
+                      id: result[i].id,
+                      title: result[i].title,
+                      post_text: result[i].post_text,
+                      subspeak: userInfo.SubbedSubspeaks[j].subspeak_name,
+                      votes: countedVotes,
+                      op: originalPoster,
+                      comments: comments.length
+                    }
+                    postArray.push(post)
+                    
+                    if (j === userInfo.SubbedSubspeaks.length - 1 && i === result.length - 1) {
+                      console.log(postArray)
+                      res.json(postArray)
+                    }
+                  })
 
                 })
-                console.log(votes)
-                let post = {
-                  id: result[i].id,
-                  title: result[i].title,
-                  post_text: result[i].post_text,
-                  subspeak: userInfo.SubbedSubspeaks[j].subspeak_name,
-                  votes: countedVotes
-                }
-                postArray.push(post)
-
-                if (j === userInfo.SubbedSubspeaks.length - 1 && i === result.length - 1) {
-                  res.json(postArray)
-                }
-
               })
             }
+
           })
         }
       })
@@ -117,7 +135,7 @@ module.exports = function (app) {
       },
 
     }).then(result => {
-      console.log("RESULTS AHHH: " + JSON.stringify(result))
+
       db.Post.findAll({
         where: {
           SubspeakId: result.id
@@ -126,37 +144,56 @@ module.exports = function (app) {
 
         //for each post get the votes and respond to request
         for (let i = 0; i < posts.length; i++) {
-          db.Votes.findAll({
+          db.Users.findOne({
             where: {
-              PostId: posts[i].id
+              id: posts[i].UserId
             }
-          }).then(votes => {
-            let countedVotes = 0;
-            votes.forEach(eachVote => {
-              if(eachVote.votes === "upvote"){
-                console.log("anything")
-                countedVotes++;
-              } else {
-                countedVotes--;
+          }).then(op => {
+
+            //need to query the users db to get OP
+            console.log("OP: " + JSON.stringify(op));
+            let originalPoster = op.user_name;
+            db.Votes.findAll({
+              where: {
+                PostId: posts[i].id
               }
+            }).then(votes => {
+              let countedVotes = 0;
+              votes.forEach(eachVote => {
+                if (eachVote.votes === "upvote") {
+                  console.log("anything")
+                  countedVotes++;
+                } else {
+                  countedVotes--;
+                }
 
+              })
+              db.Comments.findAll({
+                where: {
+                  PostId: posts[i].id
+                }
+              }).then(comments => {
+               
+                let post = {
+                  id: posts[i].id,
+                  title: posts[i].title,
+                  post_text: posts[i].post_text,
+                  subspeak: req.params.name,
+                  votes: countedVotes,
+                  op: originalPoster,
+                  comments: comments.length
+                }
+                postArray.push(post)
+                
+            
+                
+                if (i === posts.length - 1) {
+                  res.json(postArray)
+                }
+              })
             })
-            let post = {
-              id: posts[i].id,
-              title: posts[i].title,
-              post_text: posts[i].post_text,
-              subspeak: req.params.name,
-              votes: countedVotes
-            }
-            postArray.push(post)
-
-            if (i === posts.length - 1) {
-              res.json(postArray)
-            }
           })
         }
-
-
       })
     })
   })
@@ -340,26 +377,64 @@ module.exports = function (app) {
   })
   //get all post
   app.get("/api/getAll", function (req, res) {
-    let posts = []
-    db.Post.findAll({}).then(post => {
-      for (let i = 0; i < post.length; i++) {
 
-        db.Votes.findAll({
+    let posts = []
+
+    db.Post.findAll({}).then(post => {
+
+      for (let i = 0; i < post.length; i++) {
+        db.Users.findOne({
           where: {
-            PostId: post[i].id
+            id: post[i].UserId
           }
-        }).then(result => {
-          let fullPost = {
-            title: post[i].title,
-            subspeak: post[i].subspeak,
-            post_text: post[i].post_text,
-            votes: result.length
-          }
-          posts.push(fullPost);
-          if (i === post.length - 1) {
-            res.json(posts)
-          }
+        }).then(op => {
+
+          
+          db.Subspeaks.findOne({
+            where: {
+              id: post[i].SubspeakId
+            }
+
+          }).then(subspeak => {
+
+            db.Votes.findAll({
+            where: {
+              PostId: post[i].id
+            }
+          }).then(votes => {
+            
+            let countedVotes = 0;
+            votes.forEach(eachVote => {
+              if (eachVote.votes === "upvote") {
+                countedVotes++;
+              } else {
+                countedVotes--;
+              }
+
+            })
+            
+            db.Comments.findAll({
+              where: {
+                PostId:post[i].id
+              }
+            }).then(comments => {
+              
+              let fullPost = {
+                title: post[i].title,
+                subspeak: subspeak.name,
+                post_text: post[i].post_text,
+                votes: countedVotes,
+                op:op.user_name, 
+                comments: comments.length
+              }
+              posts.push(fullPost);
+              if (i === post.length - 1) {
+                res.json(posts)
+              }
+            })
+          })
         })
+      })
       }
     });
   })
@@ -381,11 +456,21 @@ module.exports = function (app) {
         UserId: userId
       }
     }).then((userSubs) => {
+      let randomSpeaks = [];
+      let usedNumbers = [];
+      if(userSubs.length === 0){
+        db.Subspeaks.findAll({ order: Sequelize.literal('rand()'), limit: 5 }).then(speaks => {
+            
+              console.log(`RandomSpeaks: ${speaks}`)
+            res.json({noSubs: true, subspeaks: speaks})
+        })
+      }else {
 
-
-      console.log("USERINFO: " + JSON.stringify(userSubs));
-
-      res.json(userSubs)
+        
+        console.log("SUBSCRIBED: " + JSON.stringify(userSubs));
+        
+        res.json(userSubs)
+      }
     })
   });
   //subscribe the logged in user to a subspeak

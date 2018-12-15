@@ -8,29 +8,30 @@
       <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4 class="modal-title">Create Subspeak</h4>
-          {{warnings}}
+
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
         <div class="modal-body subspeak-body">
+          <p class="modal-subtext">A subspeak is a communtiy on Speakit. A place where like minded people can come
+            together and discuess and
+            share their ideas.</p>
 
-          {{#if errors}}
-          {{#each errors}}
-          <div class="alert alert-danger">
-            {{this.msg}}
-          </div>
-          {{/each}}
-          {{/if}}
           <form id="createSSForm">
-            <input type="text" id="subspeakName" name="name" placeholder="name">
-            <input type="text" id="subspeakDesc" name="description" placeholder="description">
-            <button type="submit">Submit</button>
-          </form>
-
+            <div class="form-group">
+              <label for="name">Subspeak Name (no spaces)</label>
+              <input class="form-control" type="text" id="subspeakName" name="name" placeholder="movies">
+              <label for="description">Description (max 100 characters)</label>
+              <input class="form-control" type="text" id="subspeakDesc" name="description" placeholder="News & discussion about movies"
+                maxlength="100">
+              <button class="btn btn-info btn-lg mainBtn" type="submit"><i class="fas fa-pen-nib"></i> Create</button>
           </form>
         </div>
+
 
       </div>
 
     </div>
+
   </div>
+</div>

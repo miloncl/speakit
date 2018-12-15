@@ -12,10 +12,15 @@ body {
 ul {
   list-style-type: none;
   padding: 0;
+  margin: 0;
 }
 
 ul li {
   float: left;
+}
+
+a:hover {
+  text-decoration: none;
 }
 
 .fa,
@@ -24,7 +29,7 @@ ul li {
   font-family: "Font Awesome 5 Free";
   font-size: 20px;
   margin: auto;
-  padding: 20px;
+
 }
 
 .navbar-brand {
@@ -57,9 +62,9 @@ ul li {
 }
 
 .navbar {
-  z-index: 9999;
+  z-index: 100;
   margin: 0;
-  border-bottom: 1px solid #00000022;
+  border-bottom: 1px solid #00000014;
   max-height: 76px;
   height: 100%;
   background-color: #00000000 !important;
@@ -67,7 +72,7 @@ ul li {
 
 #title_row {
   width: 100%;
-  border-bottom: 1px solid #00000022;
+  border-bottom: 1px solid #00000014;
   padding: 0 30px 0 30px;
   max-height: 87px;
   height: 100%;
@@ -78,7 +83,7 @@ ul li {
 }
 
 .postTextDiv {
-  border-bottom: 1px solid #00000022;
+  border-bottom: 1px solid #00000014;
   max-height: 240px;
   height: 100%;
 }
@@ -87,30 +92,128 @@ ul li {
   margin: auto;
 }
 
+.menuIcons {
+  margin: auto;
+  padding: 20px;
+  color: #ababab;
+}
+
+.postIcons {
+  margin: 10px;
+}
+
+.postIcons>i {
+  padding: 10px;
+  color: #707070;
+}
+
+.postIcons>button>i {
+  padding: 10px;
+  cursor: pointer;
+  color: #707070;
+}
+
+.postIcons>span {
+  color: #707070;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+
+}
+
+.post_description {
+  font-family: 'Merriweather', sans-serif;
+  font-size: 17px;
+  color: #707070;
+}
+
+.upvote {
+  background: none;
+  border: 0;
+}
+
+.downvote {
+  background: none;
+  border: 0;
+}
+
 .logoSpeak {
   font-family: 'Montserrat', sans-serif;
   font-size: 28px;
   font-weight: 700;
   color: #707070;
-  text-shadow: 0px 3px 6px #00000061;
+  text-shadow: 0px 3px 6px #00000040;
 }
 
 .logoIt {
   font-family: 'Montserrat', sans-serif;
   font-size: 28px;
   font-weight: 700;
-  color: #4d90fe;
-  text-shadow: 0px 3px 6px #00000061;
+  color: #46A8D4;
+  text-shadow: 0px 3px 6px #00000040;
 }
 
+.sideMenuSubspeakButtons {
+  color: #46A8D4;
+}
+
+.modal-header {
+  border: none !important;
+}
+
+.modal-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 20px;
+  color: #46a8d4;
+  font-weight: 700;
+}
+
+.modal-subtext {
+  font-family: 'Merriweather', sans-serif;
+  font-size: 13px;
+  color: #707070;
+  font-weight: 700;
+}
+
+.modal-content {
+  border-radius: 0;
+  box-shadow: 0px 3px 6px #0000002b;
+  border: 0;
+}
+
+.form-control {
+  border-radius: 0;
+  border: 1px solid #0000002b;
+  margin-bottom: 20px;
+}
+
+.form-control::placeholder {
+  font-family: 'Montserrat', sans-serif;
+  color: #c4c4c4;
+  font-weight: 700;
+}
+
+form,
+label {
+  font-family: 'Montserrat', sans-serif;
+  color: #707070;
+  font-weight: 700;
+}
+
+.close {
+  margin: 0 !important;
+  padding: 0 !important;
+}
 
 .mainBtn {
   border-radius: 0;
+  font-weight: 700;
+  font-family: 'Montserrat', sans-serif;
   max-width: 225px;
   max-height: 48px;
   height: 100%;
   width: 100%;
   background-color: #46A8D4;
+  text-shadow: 0px 3px 6px #00000028;
 }
 
 .loginIcon {
@@ -139,7 +242,11 @@ ul li {
   height: 100%;
   width: 100%;
   max-width: 313px;
-  box-shadow: 0px 3px 6px #00000022;
+  box-shadow: 0px 3px 6px #00000036;
+}
+
+#leftBarPlaceholder {
+  margin-left: 20px;
 }
 
 .sidebar_subspeaks {
@@ -156,6 +263,20 @@ ul li {
   padding-left: 30px;
 }
 
+.subspeak_name_post {
+  color: #ffffff;
+  font-size: 16px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  /* padding-left: 30px; */
+  /* padding: 2px; */
+  padding: 2px 20px 2px 20px;
+  background: #46a8df;
+  margin: 10px;
+  /* text-align: center; */
+  border-radius: 4px;
+}
+
 .subspeak_description {
   color: #707070;
   font-size: 12px;
@@ -166,23 +287,49 @@ ul li {
 
 .subspeaks_title {
   align-items: center;
-  border-bottom: 1px solid #00000022;
+  border-bottom: 1px solid #00000014;
   max-height: 86px;
   height: 100%;
   padding-left: 30px;
   margin-bottom: 30px;
 }
 
+#subspeaks_title_left_bar {
+  font-size: 16px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  color: #707070;
+}
+
+#subscribeSuggestion {
+  font-size: 28px;
+  font-weight: 700;
+  font-family: 'Montserrat', sans-serif;
+  color: #707070;
+  margin-top: 30px;
+}
+
+#subscribeSuggestionSecondary {
+  font-family: 'Merriweather', sans-serif;
+  font-weight: 700;
+  font-size: 17px;
+  color: #707070;
+}
+
+#post_row {
+  margin-bottom: 20px;
+}
+
 .post_container {
   background-color: #ffffff;
   max-width: 1200px;
   margin: auto;
-  border: 1px solid #00000022;
-  margin-top: 40px;
+  border: 1px solid #00000014;
+  margin-top: 10px;
 }
 
 .post_title_container {
-  border-bottom: 1px solid #00000022;
+  border-bottom: 1px solid #00000014;
   padding: 0 30px 0 30px;
 }
 
@@ -192,7 +339,7 @@ ul li {
 
 .post_footer {
 
-  border-top: 1px solid #00000022;
+  border-top: 1px solid #00000014;
 }
 
 .commentContainer {
@@ -200,12 +347,12 @@ ul li {
   max-width: 1200px;
   width: 100%;
   margin: auto;
-  border: 1px solid #00000022;
+  border: 1px solid #00000014;
   margin-top: 40px;
 }
 
 .commentBody {
-  border-bottom: 1px solid #00000022;
+  border-bottom: 1px solid #00000014;
   margin-top: 30px;
   padding-left: 30px;
   padding-bottom: 30px;
@@ -225,7 +372,7 @@ ul li {
   height: 100%;
   width: 100%;
   max-width: 313px;
-  box-shadow: 0px 3px 6px #00000022;
+  box-shadow: 0px 3px 6px #00000036;
 
 }
 
@@ -233,11 +380,12 @@ ul li {
   border-radius: 0px;
   background-color: #ffffff;
   color: #000000;
-  border-bottom: 1px solid #00000022;
+  border-bottom: 1px solid #00000014;
   max-height: 76px;
   height: 100%;
   align-items: center;
 }
+
 
 .loginmodal-container {
   padding: 30px;
@@ -302,33 +450,42 @@ select {
   margin-bottom: 20px;
 }
 
-.dropdown{
-  background-color: white;
-  color: grey;
-  border: 2px solid grey;
-  height: 40px;
-  width: 160px;
-  margin: 10px;
-  
+.btn-group {
+  width: 100%;
 }
-.dropdown:hover{
-  background-color: grey;
+
+.dropdown {
+  background-color: white;
+  color: #ABABAB;
+  border: 2px solid #7070701e;
+  border-radius: 0;
+  max-width: 226px;
+  width: 100%;
+
+}
+
+#dropdownUsername {
+  padding: 10px;
+}
+
+.dropdownP {
+  margin: auto;
+}
+
+.dropdown:hover {
+  background-color: #46A8D4;
   color: white;
-  border: 2px solid grey;
+
 }
-.dropdown:active{
-  background-color: white;
-  color: grey;
-  border: 2px solid grey;
+
+.dropdown:active {
+  background-color: #46A8D4;
+
+  color: white;
+
+
 }
-.dropdown::after{
-  color: grey;
-  margin-top: 5px;
-}
-.dropdown::after {
-  color: grey;
-  margin-top: 5px;
-}
+
 .dropdown-toggle::after {
   width: 0;
   height: 0;
@@ -340,21 +497,42 @@ select {
   border-bottom: 0;
   border-left: .3em solid transparent;
 }
-.down-arrow{
+
+.down-arrow {
   font-family: "Font Awesome 5 Free";
   font-size: 20px;
   margin-left: 15px;
   padding: 0px;
 }
 
-.myfeed{
+.myfeed {
   color: #707070;
   font-weight: bold
 }
 
-.title{
+.pageTitle {
   font-family: 'Montserrat', sans-serif;
-  color: black;
-  font-weight: bold
+  color: #46A8D4;
+  font-weight: 700;
+  font-size: 20px;
+}
 
+.title>a {
+  font-family: 'Montserrat', sans-serif;
+  color: #000000;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.fa-chevron-right {
+  font-size: 15px;
+  padding-left: 10px;
+  padding-bottom: -19px;
+  position: relative;
+  /* margin-bottom: 10px; */
+  top: -1px;
+}
+
+.dropdown-toggle::after {
+  display: none;
 }
