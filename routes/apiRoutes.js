@@ -295,10 +295,9 @@ module.exports = function (app) {
           votes: "upvote",
           UserId: userId,
           PostId: task.id
-        }).then(voted => {
-
         })
       })
+      res.json(true)
     })
 
   });

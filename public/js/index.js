@@ -381,9 +381,9 @@ $(document).ready(function () {
 
     //data gets sent to the api rout /s/subspeaks
     event.preventDefault();
-
+    let newSubspeakName =subspeakName.val().trim() 
     var data = {
-      name: subspeakName.val().trim(),
+      name: newSubspeakName,
       views: 0,
       description: subspeakDesc.val().trim(),
       numberofsubs: 1,
@@ -393,7 +393,17 @@ $(document).ready(function () {
 
     API.createSubspeak(data).then(function (created) {
       if(created === true){
-        location.reload();
+      
+        var newdata = {
+          subspeakName: newSubspeakName,
+          title: `Welcome to ${newSubspeakName}`,
+          text: `This is the first post on this subspeak. Create More!`
+        }
+        API.createPost(newdata).then(function (done) {
+          if(done){
+            location.reload();
+          }
+        })
       } else {
         $('#ssError').append("Subspeak Not Created");
       }
